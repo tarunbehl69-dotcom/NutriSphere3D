@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Medical Report — NutriSphere 3D</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased">
+
+  <!-- Clinical Navigation Bar -->
+  <header class="border-b border-slate-200 bg-white/95 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="/" class="w-9 h-9 rounded-lg bg-teal-600 flex items-center justify-center font-bold text-white text-lg shadow-sm">
+          N
+        </a>
+        <div>
+          <a href="/" class="font-bold text-lg text-slate-900 tracking-tight">NutriSphere <span class="text-teal-600">3D</span></a>
+          <span class="text-xs px-2 py-0.5 ml-1 rounded bg-teal-50 text-teal-700 border border-teal-200 font-medium">Ingestion Pipeline</span>
+        </div>
+      </div>
+
+      <nav class="hidden lg:flex items-center gap-6 text-sm font-medium">
+        <a href="/" class="text-slate-600 hover:text-teal-600 transition-colors">Home</a>
+        <a href="/upload" class="text-teal-700 font-semibold border-b-2 border-teal-600 pb-1">Upload Report</a>
+        <a href="/anatomy" class="text-slate-600 hover:text-teal-600 transition-colors">3D Anatomy</a>
+        <a href="/results" class="text-slate-600 hover:text-teal-600 transition-colors">Laboratory Results</a>
+        <a href="/dashboard" class="text-slate-600 hover:text-teal-600 transition-colors">Health Dashboard</a>
+        <a href="/nutrition" class="text-slate-600 hover:text-teal-600 transition-colors">Nutrition</a>
+        <a href="/alcohol" class="text-slate-600 hover:text-teal-600 transition-colors">Alcohol & Health</a>
+        <a href="/games" class="text-slate-600 hover:text-teal-600 transition-colors">3D Health Games</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <button onclick="window.presentationInstance && window.presentationInstance.startTour()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          Presentation
+        </button>
+        <a href="/anatomy" class="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors">
+          3D Body Atlas
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Safety Banner -->
+  <div class="bg-amber-50 border-b border-amber-200 px-4 py-2 text-xs text-amber-800 text-center flex items-center justify-center gap-2">
+    <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <span><strong>Data Security & Privacy:</strong> NutriSphere 3D processes clinical documents in a secure, sandboxed environment. Original documents and extracted values can be completely purged at any time from your dashboard.</span>
+  </div>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-10 w-full flex flex-col gap-8">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Upload Laboratory Report</h1>
+      <p class="text-xs sm:text-sm text-slate-500 mt-1">Upload a PDF or image medical report to extract normalized laboratory biomarkers, verified reference intervals, and 3D organ mappings.</p>
+    </div>
+
+    <!-- Drag & Drop Upload Zone -->
+    <div class="medical-card p-10 flex flex-col items-center justify-center border-2 border-dashed border-slate-300 hover:border-teal-500 rounded-xl transition-all cursor-pointer text-center bg-white" id="drop-zone">
+      <input type="file" id="file-input" class="hidden" accept=".pdf,image/jpeg,image/png">
+      <div class="w-14 h-14 rounded-full bg-teal-50 border border-teal-200 flex items-center justify-center text-teal-600 mb-3">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+      </div>
+      <h3 class="font-bold text-base text-slate-900">Drag & drop your medical document here</h3>
+      <p class="text-xs text-slate-500 mt-1">Accepts PDF (multi-page up to 20 pages), JPG, and PNG files up to 15MB</p>
+      <div id="file-name-display" class="hidden mt-4 px-4 py-2 rounded-lg bg-teal-50 border border-teal-200 text-teal-800 text-xs font-mono font-medium"></div>
+    </div>
+
+    <!-- Pre-Built Synthetic Fixtures Hub -->
+    <div class="medical-card p-6 flex flex-col gap-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div>
+          <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+            <svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            Pre-Built Synthetic Report Fixtures (Ready for Immediate Testing)
+          </h3>
+          <p class="text-xs text-slate-500">Click any fixture to immediately test the ingestion pipeline without uploading personal files.</p>
+        </div>
+        <span class="badge-normal text-xs font-mono">3 Fixtures Available</span>
+      </div>
+
+      <div id="sample-reports-grid" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <!-- Rendered dynamically by upload.js -->
+      </div>
+    </div>
+
+    <!-- Required Consent & Privacy Declaration -->
+    <div class="medical-card p-6 flex flex-col gap-4">
+      <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+        <svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        Required Explicit Consent & Privacy Declaration
+      </h3>
+      <div class="text-xs text-slate-600 space-y-2 bg-slate-50 p-4 rounded-lg border border-slate-200">
+        <p>1. <strong>Academic & Educational Purpose:</strong> I understand that NutriSphere 3D provides non-diagnostic health literacy. A laboratory reference interval is not a diagnosis, and normal values do not rule out disease.</p>
+        <p>2. <strong>No Safe Alcohol Allowance:</strong> I understand that no laboratory report establishes a safe personal alcohol intake.</p>
+        <p>3. <strong>Right to Deletion:</strong> Extracted data can be permanently deleted at any time with audit logging.</p>
+      </div>
+
+      <label class="flex items-center gap-3 text-xs text-slate-700 cursor-pointer pt-2">
+        <input type="checkbox" id="consent-checkbox" class="w-4 h-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+        <span class="font-medium">I have read and agree to the clinical disclaimer, honest scope, and data processing terms.</span>
+      </label>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex items-center justify-between gap-4">
+      <button onclick="NutriSphere.loadDemoSession()" class="text-xs text-teal-600 font-medium hover:underline">
+        Don't have a file? Load synthetic demo patient (Rohan Sharma)
+      </button>
+
+      <button id="upload-btn" disabled class="px-6 py-2.5 rounded-lg text-xs font-semibold bg-teal-600 text-white opacity-50 cursor-not-allowed shadow-sm transition-all hover:bg-teal-700">
+        Extract & Review Biomarkers
+      </button>
+    </div>
+
+    <!-- Human Verification Section (Shown when report needs review) -->
+    <div id="verification-section" class="hidden medical-card p-6 flex flex-col gap-4 border-amber-300">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div>
+          <h2 class="text-base font-bold text-amber-900 flex items-center gap-2">
+            <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            Human Verification Required
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">Please review extracted test values and laboratory intervals before proceeding to 3D anatomical exploration.</p>
+        </div>
+        <span class="badge-high text-xs">Review Pending</span>
+      </div>
+
+      <!-- Report Metadata Header in Verification -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs bg-slate-50 p-4 rounded-lg border border-slate-200">
+        <div>
+          <label class="text-slate-600 block mb-1 font-semibold">Laboratory Name:</label>
+          <input type="text" id="verify-lab-name" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-slate-900 text-xs focus:ring-2 focus:ring-teal-500">
+        </div>
+        <div>
+          <label class="text-slate-600 block mb-1 font-semibold">Collection Date:</label>
+          <input type="date" id="verify-date" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-slate-900 text-xs focus:ring-2 focus:ring-teal-500">
+        </div>
+      </div>
+
+      <!-- Biomarkers Verification Table -->
+      <div class="overflow-x-auto rounded-lg border border-slate-200 max-h-96">
+        <table class="clinical-table">
+          <thead>
+            <tr>
+              <th>Test Name</th>
+              <th>Value</th>
+              <th>Unit</th>
+              <th>Ref Low</th>
+              <th>Ref High</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="verification-table-body">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex items-center justify-between pt-3 border-t border-slate-200">
+        <span class="text-xs text-slate-500">All original lab ranges and units are preserved.</span>
+        <button id="confirm-verification-btn" class="px-5 py-2 rounded-lg text-xs font-semibold bg-teal-600 hover:bg-teal-700 text-white shadow-sm transition-all">
+          Confirm Verified Report & Explore in 3D &rarr;
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Experience 5: From Report to Body — Cinematic Guided Transition Modal -->
+  <div id="transition-modal" class="fixed inset-0 z-50 bg-[#101419]/90 backdrop-blur-xl flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
+    <div class="spatial-glass w-full max-w-2xl border border-teal-500/40 shadow-2xl p-6 sm:p-8 flex flex-col gap-6 relative transform transition-all duration-300 scale-95" id="transition-card">
+      
+      <!-- Header -->
+      <div class="flex items-start justify-between border-b border-slate-800 pb-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="spatial-pill text-[10px] text-teal-300 py-0.5 px-2">
+              <span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span>
+              Experience 5 • Spatial Projection
+            </span>
+            <span class="text-xs text-slate-400 font-mono" id="transition-step-label">Step 1 of 4</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-black text-white" id="transition-title">From Report to Body: Guided Transition</h2>
+        </div>
+        <button id="transition-close-btn" class="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Stage 1: Document Scanning Effect -->
+      <div id="transition-stage-scan" class="flex flex-col items-center justify-center py-6 gap-4">
+        <div class="relative w-48 h-60 rounded-xl bg-slate-900 border border-teal-500/30 overflow-hidden flex flex-col items-center justify-center p-4 shadow-inner">
+          <div class="w-12 h-16 border border-slate-700 rounded bg-slate-800/80 mb-2 flex items-center justify-center text-slate-500">
+            <svg class="w-6 h-6 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+          <div class="text-[11px] font-mono text-teal-300 text-center" id="transition-doc-name">Medical_Report.pdf</div>
+          <div class="text-[10px] text-slate-400 mt-1">PyMuPDF Layer Extraction</div>
+          
+          <!-- Scanning Laser Line -->
+          <div class="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-teal-400 to-transparent shadow-[0_0_12px_#1ad1c6]" id="scanning-laser" style="animation: scannerBeam 2s ease-in-out infinite;"></div>
+        </div>
+        <p class="text-xs text-slate-300 font-medium animate-pulse" id="scan-status-text">Ingesting Report: Decomposing digital vector text & tables...</p>
+      </div>
+
+      <!-- Stage 2: Extracting Clinical Entities (Entity chips lighting up) -->
+      <div id="transition-stage-entities" class="hidden flex flex-col gap-4 py-2">
+        <div class="grid grid-cols-3 gap-3 text-center">
+          <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
+            <div class="text-xl font-bold text-teal-400 font-mono" id="ent-analyte-count">0</div>
+            <div class="text-[10px] text-slate-400 uppercase font-semibold mt-0.5">Analytes Parsed</div>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
+            <div class="text-xl font-bold text-cyan-300 font-mono" id="ent-unit-count">0</div>
+            <div class="text-[10px] text-slate-400 uppercase font-semibold mt-0.5">Standard Units</div>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
+            <div class="text-xl font-bold text-emerald-400 font-mono" id="ent-ref-count">0</div>
+            <div class="text-[10px] text-slate-400 uppercase font-semibold mt-0.5">Reference Ranges</div>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Verified Biomarkers Stream:</div>
+          <div class="flex flex-wrap gap-1.5" id="transition-chips-container">
+            <!-- Chips injected via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 3: Organ System Mapping & Summary -->
+      <div id="transition-stage-ready" class="hidden flex flex-col gap-4 py-2">
+        <div class="p-4 rounded-xl bg-teal-950/40 border border-teal-500/40 flex items-start gap-3">
+          <div class="w-10 h-10 rounded-xl bg-teal-500/20 border border-teal-400/40 flex items-center justify-center text-teal-300 shrink-0 mt-0.5">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-white" id="transition-focal-headline">Primary Focal Area: Hepatic System (Liver)</h4>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed" id="transition-focal-desc">
+              Your report shows findings in the Hepatic Panel (ALT 58 U/L, AST 46 U/L) and Lipid Panel. Your 3D Body Atlas is prepared with direct physiological projections.
+            </p>
+          </div>
+        </div>
+
+        <!-- Mapped Organ Badges Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs" id="transition-organs-grid">
+          <div class="p-2.5 rounded-lg bg-slate-900/80 border border-amber-500/40 text-left">
+            <div class="font-bold text-white flex items-center justify-between">
+              <span>Liver</span>
+              <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+            </div>
+            <div class="text-[10px] text-amber-300 font-mono mt-0.5">2 Elevated (ALT/AST)</div>
+          </div>
+          <div class="p-2.5 rounded-lg bg-slate-900/80 border border-teal-500/30 text-left">
+            <div class="font-bold text-white flex items-center justify-between">
+              <span>Heart</span>
+              <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+            </div>
+            <div class="text-[10px] text-teal-300 font-mono mt-0.5">Lipids & ApoB</div>
+          </div>
+          <div class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-700 text-left">
+            <div class="font-bold text-white flex items-center justify-between">
+              <span>Kidneys</span>
+              <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+            </div>
+            <div class="text-[10px] text-slate-400 font-mono mt-0.5">eGFR 88 mL/min</div>
+          </div>
+          <div class="p-2.5 rounded-lg bg-slate-900/80 border border-rose-500/40 text-left">
+            <div class="font-bold text-white flex items-center justify-between">
+              <span>Spine</span>
+              <span class="w-2 h-2 rounded-full bg-rose-400 animate-ping"></span>
+            </div>
+            <div class="text-[10px] text-rose-300 font-mono mt-0.5">Vitamin D Low</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Action Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-800" id="transition-actions">
+        <span class="text-xs text-slate-400 font-mono" id="transition-countdown">Auto-launching Body Atlas in 4s...</span>
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <a id="btn-transition-classic" href="/results" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-semibold transition-all">
+            View Classic Report
+          </a>
+          <a id="btn-transition-atlas" href="/anatomy?focus=Liver" class="px-6 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 text-xs font-bold shadow-lg shadow-teal-500/25 transition-all flex items-center gap-1.5">
+            <span>Enter the Body Atlas &rarr;</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Clinical Footer -->
+  <footer class="border-t border-slate-200 bg-white mt-12 py-8 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <span class="font-bold text-slate-800">NutriSphere 3D</span>
+        <span>• Healthcare Informatics Project (PM02)</span>
+      </div>
+      <div class="flex items-center gap-4 text-slate-600">
+        <a href="/" class="hover:text-teal-600">Home</a>
+        <a href="/anatomy" class="hover:text-teal-600">3D Anatomy</a>
+        <a href="/results" class="hover:text-teal-600">Results</a>
+        <a href="/dashboard" class="hover:text-teal-600">Dashboard</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/app.js"></script>
+  <script src="/js/upload.js"></script>
+  <script src="/js/presentation.js"></script>
+</body>
+</html>

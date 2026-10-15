@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NutriSphere X — The Body Atlas | Immersive 3D Medical Intelligence</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="/js/lib/OrbitControls.js"></script>
+  <script src="/js/lib/GLTFLoader.js"></script>
+  <script src="/js/lib/DRACOLoader.js"></script>
+  <script src="/js/lib/gsap.min.js"></script>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-[#101419] text-slate-100 min-h-screen flex flex-col antialiased overflow-hidden select-none">
+
+  <!-- Spatial Navigation Header -->
+  <header class="h-16 border-b border-slate-800/80 bg-[#111E2C]/90 backdrop-blur-xl z-40 px-4 sm:px-6 flex items-center justify-between shrink-0">
+    
+    <!-- TOP LEFT: NutriSphere X Brand -->
+    <div class="flex items-center gap-3">
+      <a href="/" class="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center font-bold text-white text-lg shadow-lg shadow-teal-500/25">
+        X
+      </a>
+      <div>
+        <a href="/" class="font-extrabold text-lg text-white tracking-tight flex items-center gap-1.5">
+          <span>NutriSphere</span>
+          <span class="text-teal-400">X</span>
+        </a>
+        <div class="text-[10px] text-slate-400 font-mono tracking-wider uppercase flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
+          The Body Atlas • Spatial Medical Intelligence
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP CENTER: Current Viewing Mode -->
+    <div class="hidden md:flex items-center gap-2">
+      <div id="current-view-title" class="spatial-pill flex items-center gap-2 border border-teal-500/30">
+        <span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span>
+        <span class="text-xs font-semibold text-white">Whole Body Overview</span>
+      </div>
+    </div>
+
+    <!-- TOP RIGHT: Report Selector, Presentation Mode, Exit Explorer -->
+    <div class="flex items-center gap-2.5">
+      
+      <!-- Report Selector Dropdown -->
+      <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900/90 border border-slate-700/80 text-xs">
+        <span class="text-[10px] text-slate-400 font-bold uppercase">Record:</span>
+        <select id="report-selector" class="bg-transparent text-xs text-teal-300 font-medium focus:outline-none cursor-pointer">
+          <option value="rep_demo_2026_001" class="bg-slate-900 text-white">Rohan Sharma (2026 Comprehensive)</option>
+          <option value="rep_demo_2025_001" class="bg-slate-900 text-white">Rohan Sharma (2025 Follow-Up)</option>
+          <option value="rep_demo_2024_001" class="bg-slate-900 text-white">Rohan Sharma (2024 Baseline)</option>
+        </select>
+      </div>
+
+      <!-- Health Story Mode Launcher Button -->
+      <button id="btn-launch-story" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-teal-600 hover:bg-teal-500 text-slate-950 transition-all flex items-center gap-1.5 shadow-lg shadow-teal-600/25">
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        <span>My Health Story</span>
+      </button>
+
+      <!-- Professor Demo / Presentation Mode Button -->
+      <button onclick="window.presentationInstance && window.presentationInstance.startTour()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+        <span class="hidden sm:inline">Presentation Mode</span>
+      </button>
+
+      <!-- Optional 3D Health Games Link -->
+      <a href="/games" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-teal-300 border border-slate-700 transition-all flex items-center gap-1.5" title="Play NutriSphere Quest 3D Games">
+        <span class="text-xs">🎮</span>
+        <span class="hidden sm:inline">3D Health Games</span>
+      </a>
+
+      <!-- Controls Drawer Toggle Button -->
+      <button id="btn-toggle-left-rail" onclick="toggleLeftRail()" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-teal-300 border border-slate-700 transition-colors flex items-center gap-1.5" title="Toggle Controls & Organ Selector">
+        <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
+        <span class="text-xs font-semibold">Controls</span>
+      </button>
+
+      <!-- Exit Explorer / Home -->
+      <a href="/" class="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition-colors" title="Exit to Home">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </a>
+
+    </div>
+  </header>
+
+  <!-- IMMERSIVE BODY ATLAS MAIN STAGE -->
+  <main class="relative flex-1 w-full h-[calc(100vh-4rem)] overflow-hidden bg-radial-gradient">
+    
+    <!-- Central 3D Canvas Viewport (Expansive Full Height) -->
+    <div id="canvas-3d-container" class="absolute inset-0 w-full h-full"></div>
+
+    <!-- LEFT FLOATING RAIL: Compact 4-Tab Control System (3D Spatial Glass) -->
+    <aside id="anatomy-left-rail" class="absolute left-4 top-4 bottom-24 z-30 w-80 max-w-[calc(100vw-2rem)] spatial-glass p-3.5 flex flex-col gap-3 overflow-y-auto transition-all duration-300 shadow-2xl">
+      
+      <!-- Top header with close button -->
+      <div class="flex items-center justify-between px-1">
+        <span class="text-[11px] font-bold uppercase tracking-wider text-teal-400 flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
+          Body Atlas Controls
+        </span>
+        <button onclick="toggleLeftRail(false)" class="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-slate-200" title="Hide Controls">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Primary Tab Bar: Explore | Layers | Learn | History -->
+      <div class="grid grid-cols-4 gap-1 p-1 bg-slate-900/95 rounded-xl border border-slate-700/80 shrink-0">
+        <button id="tab-btn-explore" onclick="switchAnatomyTab('explore')" class="tab-btn active py-1.5 px-1 rounded-lg text-[11px] font-bold text-center transition-all bg-teal-600 text-white shadow-md">
+          Explore
+        </button>
+        <button id="tab-btn-layers" onclick="switchAnatomyTab('layers')" class="tab-btn py-1.5 px-1 rounded-lg text-[11px] font-semibold text-center transition-all text-slate-400 hover:text-white hover:bg-slate-800">
+          Layers
+        </button>
+        <button id="tab-btn-learn" onclick="switchAnatomyTab('learn')" class="tab-btn py-1.5 px-1 rounded-lg text-[11px] font-semibold text-center transition-all text-slate-400 hover:text-white hover:bg-slate-800">
+          Learn
+        </button>
+        <button id="tab-btn-history" onclick="switchAnatomyTab('history')" class="tab-btn py-1.5 px-1 rounded-lg text-[11px] font-semibold text-center transition-all text-slate-400 hover:text-white hover:bg-slate-800">
+          History
+        </button>
+      </div>
+
+      <!-- TAB PANE 1: EXPLORE -->
+      <div id="tab-pane-explore" class="flex flex-col gap-3">
+        <!-- Search Input -->
+        <div>
+          <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Search Body & Lab Tests</label>
+          <div class="relative">
+            <input type="text" id="organ-search-input" placeholder="Search liver, heart, ALT, LDL..." class="w-full text-xs px-3 py-1.5 pl-8 rounded-lg bg-slate-900/90 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-teal-400">
+            <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+        </div>
+
+        <!-- Body Systems with Plain English Labels -->
+        <div>
+          <h2 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Body Systems</h2>
+          <div class="grid grid-cols-2 gap-1" id="system-filter-list">
+            <button class="sys-btn active px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-left flex items-center justify-between bg-teal-500/20 text-teal-300 border border-teal-500/40 col-span-2" data-sys="all">
+              <span>All Body Systems</span>
+              <span class="text-[10px] font-mono text-teal-400">9</span>
+            </button>
+            <button class="sys-btn px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-left flex items-center justify-between hover:bg-slate-800 text-slate-300 transition-colors" data-sys="digestive">
+              <span>Liver & Digestion</span>
+              <span class="text-[9px] font-mono text-slate-500">4</span>
+            </button>
+            <button class="sys-btn px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-left flex items-center justify-between hover:bg-slate-800 text-slate-300 transition-colors" data-sys="cardiovascular">
+              <span>Heart & Blood</span>
+              <span class="text-[9px] font-mono text-slate-500">1</span>
+            </button>
+            <button class="sys-btn px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-left flex items-center justify-between hover:bg-slate-800 text-slate-300 transition-colors" data-sys="renal">
+              <span>Kidneys</span>
+              <span class="text-[9px] font-mono text-slate-500">1</span>
+            </button>
+            <button class="sys-btn px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-left flex items-center justify-between hover:bg-slate-800 text-slate-300 transition-colors" data-sys="respiratory">
+              <span>Lungs & Air</span>
+              <span class="text-[9px] font-mono text-slate-500">1</span>
+            </button>
+            <button class="sys-btn px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-left flex items-center justify-between hover:bg-slate-800 text-slate-300 transition-colors" data-sys="endocrine">
+              <span>Hormones</span>
+              <span class="text-[9px] font-mono text-slate-500">1</span>
+            </button>
+            <button class="sys-btn px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-left flex items-center justify-between hover:bg-slate-800 text-slate-300 transition-colors" data-sys="nervous">
+              <span>Brain & Nerves</span>
+              <span class="text-[9px] font-mono text-slate-500">1</span>
+            </button>
+            <button class="sys-btn px-2.5 py-1.5 rounded-lg text-[11px] font-medium text-left flex items-center justify-between hover:bg-slate-800 text-slate-300 transition-colors col-span-2" data-sys="skeletal">
+              <span>Bones & Spine</span>
+              <span class="text-[9px] font-mono text-slate-500">1</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Organ Jump Cards -->
+        <div>
+          <h2 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Pick an Organ to Zoom</h2>
+          <div class="grid grid-cols-2 gap-1.5" id="organ-buttons-grid">
+            <button onclick="window.anatomyInstance.selectOrgan('Liver')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+              <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
+                <span>Liver</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+              </div>
+              <div class="text-[10px] text-amber-400 font-medium">ALT, AST Elevated</div>
+            </button>
+            <button onclick="window.anatomyInstance.selectOrgan('Heart')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+              <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
+                <span>Heart</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+              </div>
+              <div class="text-[10px] text-amber-400 font-medium">LDL, ApoB Alert</div>
+            </button>
+            <button onclick="window.anatomyInstance.selectOrgan('Kidneys')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+              <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
+                <span>Kidneys</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
+              </div>
+              <div class="text-[10px] text-teal-400 font-medium">eGFR 88 mL/min</div>
+            </button>
+            <button onclick="window.anatomyInstance.selectOrgan('Pancreas')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+              <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
+                <span>Pancreas</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+              </div>
+              <div class="text-[10px] text-amber-400 font-medium">Glucose 104 mg/dL</div>
+            </button>
+            <button onclick="window.anatomyInstance.selectOrgan('Lungs')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+              <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
+                <span>Lungs</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
+              </div>
+              <div class="text-[10px] text-teal-400 font-medium">Hb 14.8 g/dL</div>
+            </button>
+            <button onclick="window.anatomyInstance.selectOrgan('Spine')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+              <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
+                <span>Spine</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
+              </div>
+              <div class="text-[10px] text-rose-400 font-medium">Vit D 22.4 (Low)</div>
+            </button>
+            <button onclick="window.anatomyInstance.selectOrgan('Stomach')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+              <div class="text-xs font-bold text-slate-100">Stomach</div>
+              <div class="text-[10px] text-slate-400 font-medium">Vitamin B12</div>
+            </button>
+            <button onclick="window.anatomyInstance.selectOrgan('Intestines')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+              <div class="text-xs font-bold text-slate-100">Intestines</div>
+              <div class="text-[10px] text-slate-400 font-medium">Iron & Ferritin</div>
+            </button>
+            <button onclick="window.anatomyInstance.selectOrgan('Brain')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+              <div class="text-xs font-bold text-slate-100">Brain</div>
+              <div class="text-[10px] text-slate-400 font-medium">Folate, TSH</div>
+            </button>
+            <button onclick="window.anatomyInstance.selectOrgan('Thyroid')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+              <div class="text-xs font-bold text-slate-100">Thyroid</div>
+              <div class="text-[10px] text-teal-400 font-medium">TSH Normal</div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB PANE 2: 3D ANATOMICAL LAYERS -->
+      <div id="tab-pane-layers" class="hidden flex-col gap-3">
+        <div>
+          <h3 class="text-xs font-bold text-white mb-1">3D Anatomical Layers</h3>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            Switch anatomical views to see how internal organs, skeleton, and body systems fit together.
+          </p>
+        </div>
+
+        <!-- 4 Layer Presets -->
+        <div class="flex flex-col gap-1.5">
+          <button onclick="window.anatomyInstance.setLayer('full')" id="layer-btn-full" class="layer-mode-btn active p-2.5 rounded-lg text-left bg-teal-500/20 text-teal-300 border border-teal-500/50 flex items-center justify-between">
+            <div>
+              <div class="text-xs font-bold">1. Full Body</div>
+              <div class="text-[10px] text-slate-400">All organs inside translucent outer shell</div>
+            </div>
+            <span class="text-teal-400 text-xs">●</span>
+          </button>
+          <button onclick="window.anatomyInstance.setLayer('organs')" id="layer-btn-organs" class="layer-mode-btn p-2.5 rounded-lg text-left bg-slate-900/60 text-slate-300 border border-slate-800 hover:border-slate-700 flex items-center justify-between">
+            <div>
+              <div class="text-xs font-bold">2. Internal Organs</div>
+              <div class="text-[10px] text-slate-400">Heart, liver, kidneys, lungs (skeleton hidden)</div>
+            </div>
+          </button>
+          <button onclick="window.anatomyInstance.setLayer('skeleton')" id="layer-btn-skeleton" class="layer-mode-btn p-2.5 rounded-lg text-left bg-slate-900/60 text-slate-300 border border-slate-800 hover:border-slate-700 flex items-center justify-between">
+            <div>
+              <div class="text-xs font-bold">3. Skeleton</div>
+              <div class="text-[10px] text-slate-400">Vertebral spine, ribcage, bone frame</div>
+            </div>
+          </button>
+          <button onclick="window.anatomyInstance.setLayer('individual')" id="layer-btn-individual" class="layer-mode-btn p-2.5 rounded-lg text-left bg-slate-900/60 text-slate-300 border border-slate-800 hover:border-slate-700 flex items-center justify-between">
+            <div>
+              <div class="text-xs font-bold">4. Individual Organ Focus</div>
+              <div class="text-[10px] text-slate-400">Isolate selected organ, ghosting others</div>
+            </div>
+          </button>
+        </div>
+
+        <!-- Body Shell Opacity Slider -->
+        <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex flex-col gap-1.5">
+          <div class="flex items-center justify-between text-xs">
+            <span class="text-[10px] font-bold uppercase text-slate-400">Outer Skin Opacity</span>
+            <span id="shell-opacity-label" class="font-mono text-teal-400 text-xs">45%</span>
+          </div>
+          <input type="range" id="layer-shell-slider" min="0" max="100" value="45" class="w-full h-1.5 bg-slate-700 rounded-lg cursor-pointer accent-teal-400">
+        </div>
+
+        <!-- Shading Style -->
+        <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex flex-col gap-1.5">
+          <span class="text-[10px] font-bold uppercase text-slate-400">Visual Shading</span>
+          <div class="grid grid-cols-3 gap-1">
+            <button onclick="window.anatomyInstance.setVisualMode('standard')" class="px-2 py-1.5 rounded text-[11px] font-medium bg-teal-500/20 text-teal-300 border border-teal-500/40">Realistic</button>
+            <button onclick="window.anatomyInstance.setVisualMode('xray')" class="px-2 py-1.5 rounded text-[11px] font-medium bg-slate-800 hover:bg-slate-700 text-slate-300">X-Ray</button>
+            <button onclick="window.anatomyInstance.setVisualMode('ghost')" class="px-2 py-1.5 rounded text-[11px] font-medium bg-slate-800 hover:bg-slate-700 text-slate-300">Ghost</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB PANE 3: LEARN (3D ALCOHOL & NUTRITION JOURNEYS) -->
+      <div id="tab-pane-learn" class="hidden flex-col gap-3">
+        <div>
+          <h3 class="text-xs font-bold text-white mb-0.5">3D Health Journeys</h3>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            Watch how alcohol or nutrition travels step-by-step through your body in 3D.
+          </p>
+        </div>
+
+        <!-- Journey Selection Toggle -->
+        <div class="grid grid-cols-2 gap-1 p-1 bg-slate-900 rounded-lg border border-slate-800">
+          <button id="btn-journey-alcohol" onclick="window.anatomyInstance.startJourney('alcohol')" class="py-1.5 rounded text-xs font-bold text-center bg-amber-500/20 text-amber-300 border border-amber-500/40">
+            🍷 Alcohol Journey
+          </button>
+          <button id="btn-journey-nutrition" onclick="window.anatomyInstance.startJourney('nutrition')" class="py-1.5 rounded text-xs font-medium text-center text-slate-400 hover:text-white hover:bg-slate-800">
+            🥗 Nutrition Journey
+          </button>
+        </div>
+
+        <!-- Step Indicator & Controls -->
+        <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex flex-col gap-2.5">
+          <div class="flex items-center justify-between">
+            <span id="journey-step-tag" class="text-[10px] font-mono uppercase font-bold text-amber-400">Step 1 of 6</span>
+            <span id="journey-organ-tag" class="text-xs font-bold text-white">Mouth & Throat</span>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+            <div id="journey-progress-bar" class="h-full bg-gradient-to-r from-teal-400 to-amber-400 w-1/6 transition-all duration-300"></div>
+          </div>
+
+          <!-- Step Narrative -->
+          <p id="journey-step-text" class="text-xs text-slate-200 leading-relaxed min-h-[56px]">
+            Alcohol enters the mouth and esophagus. A small amount begins absorbing through the mucosal lining.
+          </p>
+
+          <!-- Stepper Buttons -->
+          <div class="flex items-center justify-between gap-1 pt-1 border-t border-slate-800">
+            <button onclick="window.anatomyInstance.prevJourneyStep()" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium">
+              ◀ Prev
+            </button>
+            <button id="journey-play-pause-btn" onclick="window.anatomyInstance.toggleJourneyPlay()" class="px-3 py-1 rounded bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold shadow">
+              Pause
+            </button>
+            <button onclick="window.anatomyInstance.nextJourneyStep()" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium">
+              Next ▶
+            </button>
+            <button onclick="window.anatomyInstance.resetJourney()" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-rose-400 text-xs font-medium" title="Reset">
+              ↺ Reset
+            </button>
+          </div>
+        </div>
+
+        <!-- Key Takeaway -->
+        <div class="p-2.5 rounded-lg bg-teal-950/30 border border-teal-800/50 text-[11px] text-teal-300">
+          <strong>Smart Health Tip:</strong> Eating healthy fats or protein before drinks slows alcohol absorption by up to 50%, sparing your liver sudden metabolic strain.
+        </div>
+      </div>
+
+      <!-- TAB PANE 4: HISTORY (HOW YOUR RESULTS CHANGED) -->
+      <div id="tab-pane-history" class="hidden flex-col gap-3">
+        <div>
+          <h3 class="text-xs font-bold text-white mb-0.5">How Your Results Changed</h3>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            Comparing verified numbers across 2024, 2025, and 2026. Click any row to inspect that organ in 3D.
+          </p>
+        </div>
+
+        <!-- Select Encounter -->
+        <div>
+          <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Select Year</label>
+          <select id="history-year-select" onchange="window.anatomyInstance.switchEncounterYear(this.value)" class="w-full text-xs px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-teal-300 font-semibold focus:outline-none">
+            <option value="2026">2026 Comprehensive (Latest)</option>
+            <option value="2025">2025 Follow-Up</option>
+            <option value="2024">2024 Baseline</option>
+          </select>
+        </div>
+
+        <!-- Comparison Table -->
+        <div class="rounded-xl border border-slate-800 overflow-hidden bg-slate-900/60 text-[11px]">
+          <table class="w-full text-left">
+            <thead class="bg-slate-800/80 text-[10px] uppercase text-slate-400 font-bold border-b border-slate-700">
+              <tr>
+                <th class="p-2">Test (Organ)</th>
+                <th class="p-2 text-center">'24</th>
+                <th class="p-2 text-center">'25</th>
+                <th class="p-2 text-center text-teal-300">'26</th>
+                <th class="p-2 text-right">Trend</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 text-slate-200">
+              <tr onclick="window.anatomyInstance.selectOrgan('Liver'); window.anatomyInstance.drawSparkline('history-sparkline-canvas', [36, 48, 58], 'Liver: ALT (U/L)');" class="hover:bg-slate-800/80 cursor-pointer">
+                <td class="p-2 font-medium text-slate-100">ALT (Liver)</td>
+                <td class="p-2 text-center font-mono text-slate-400">36</td>
+                <td class="p-2 text-center font-mono text-slate-400">48</td>
+                <td class="p-2 text-center font-mono text-amber-400 font-bold">58</td>
+                <td class="p-2 text-right text-amber-400 font-bold">↑ +61%</td>
+              </tr>
+              <tr onclick="window.anatomyInstance.selectOrgan('Heart'); window.anatomyInstance.drawSparkline('history-sparkline-canvas', [118, 132, 142], 'Heart: LDL (mg/dL)');" class="hover:bg-slate-800/80 cursor-pointer">
+                <td class="p-2 font-medium text-slate-100">LDL (Heart)</td>
+                <td class="p-2 text-center font-mono text-slate-400">118</td>
+                <td class="p-2 text-center font-mono text-slate-400">132</td>
+                <td class="p-2 text-center font-mono text-amber-400 font-bold">142</td>
+                <td class="p-2 text-right text-amber-400 font-bold">↑ +20%</td>
+              </tr>
+              <tr onclick="window.anatomyInstance.selectOrgan('Pancreas'); window.anatomyInstance.drawSparkline('history-sparkline-canvas', [92, 98, 104], 'Pancreas: Glucose (mg/dL)');" class="hover:bg-slate-800/80 cursor-pointer">
+                <td class="p-2 font-medium text-slate-100">Glucose</td>
+                <td class="p-2 text-center font-mono text-slate-400">92</td>
+                <td class="p-2 text-center font-mono text-slate-400">98</td>
+                <td class="p-2 text-center font-mono text-amber-400 font-bold">104</td>
+                <td class="p-2 text-right text-amber-400 font-bold">↑ +13%</td>
+              </tr>
+              <tr onclick="window.anatomyInstance.selectOrgan('Spine'); window.anatomyInstance.drawSparkline('history-sparkline-canvas', [28.0, 25.1, 22.4], 'Spine: Vit D (ng/mL)');" class="hover:bg-slate-800/80 cursor-pointer">
+                <td class="p-2 font-medium text-slate-100">Vitamin D</td>
+                <td class="p-2 text-center font-mono text-slate-400">28</td>
+                <td class="p-2 text-center font-mono text-slate-400">25</td>
+                <td class="p-2 text-center font-mono text-rose-400 font-bold">22.4</td>
+                <td class="p-2 text-right text-rose-400 font-bold">↓ -20%</td>
+              </tr>
+              <tr onclick="window.anatomyInstance.selectOrgan('Kidneys'); window.anatomyInstance.drawSparkline('history-sparkline-canvas', [94, 91, 88], 'Kidneys: eGFR (mL/min)');" class="hover:bg-slate-800/80 cursor-pointer">
+                <td class="p-2 font-medium text-slate-100">eGFR</td>
+                <td class="p-2 text-center font-mono text-slate-400">94</td>
+                <td class="p-2 text-center font-mono text-slate-400">91</td>
+                <td class="p-2 text-center font-mono text-teal-400 font-bold">88</td>
+                <td class="p-2 text-right text-teal-400 font-bold">Stable</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Sparkline Trend Chart Canvas -->
+        <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex flex-col gap-1">
+          <div class="flex items-center justify-between text-[10px] text-slate-400 font-bold">
+            <span id="sparkline-title">Liver: ALT (U/L) Trend</span>
+            <span class="text-teal-400 font-mono">2024 → 2026</span>
+          </div>
+          <canvas id="history-sparkline-canvas" width="260" height="70" class="w-full h-16 rounded bg-slate-950/60"></canvas>
+          <div class="flex justify-between text-[9px] text-slate-500 font-mono px-1">
+            <span>2024 (Baseline)</span>
+            <span>2025</span>
+            <span>2026 (Current)</span>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- RIGHT FLOATING PANEL: Easy Plain English Organ Reveal -->
+    <aside id="organ-detail-panel" class="absolute right-4 top-4 bottom-24 z-30 w-96 max-w-[calc(100vw-2rem)] spatial-glass p-5 flex flex-col gap-3.5 overflow-y-auto hidden shadow-2xl">
+      
+      <!-- Organ Header & Plain English Name -->
+      <div class="flex items-start justify-between pb-3 border-b border-slate-800">
+        <div>
+          <span class="text-[10px] font-bold text-teal-400 uppercase tracking-widest font-mono flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
+            Organ Reveal
+          </span>
+          <h3 class="text-lg font-black text-white" id="organ-title">Liver</h3>
+          <p class="text-xs text-slate-400" id="organ-easy-role">Your Body's Master Filter & Energy Center</p>
+        </div>
+        <button onclick="window.anatomyInstance.resetView()" class="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200" title="Close Details">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Section 1: What This Organ Does (Simple Everyday Words) -->
+      <div>
+        <h4 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">What This Organ Does</h4>
+        <p class="text-xs text-slate-200 leading-relaxed font-normal" id="organ-role">
+          Cleans your blood, breaks down nutrients from food, stores energy, and helps digest fats.
+        </p>
+      </div>
+
+      <!-- Section 2: Your Test Results for this Organ -->
+      <div>
+        <div class="flex items-center justify-between mb-1.5">
+          <h4 class="text-[10px] font-bold uppercase tracking-wider text-teal-400 flex items-center gap-1.5">
+            <span>Your Test Numbers</span>
+          </h4>
+          <span class="text-[10px] text-slate-400 font-mono" id="organ-record-year">2026 Report</span>
+        </div>
+        <div class="flex flex-col gap-2" id="organ-biomarkers-container">
+          <!-- Populated dynamically by anatomy.js updateOverlayUI -->
+        </div>
+      </div>
+
+      <!-- Section 3: What These Numbers Mean (Easy Language) -->
+      <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800 text-xs">
+        <h4 class="font-bold text-teal-300 text-[11px] mb-1">What These Numbers Mean</h4>
+        <p class="text-slate-300 text-[11px] leading-relaxed" id="organ-clinical">
+          Elevated liver enzymes (ALT and AST) mean liver cells are working under extra stress. This is often temporary and can be improved with diet, lower alcohol, and rest.
+        </p>
+      </div>
+
+      <!-- Section 4: Action Bridges (Nutrition & Alcohol) -->
+      <div id="organ-bridges-container">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Reset View Button -->
+      <button onclick="window.anatomyInstance.resetView()" class="w-full py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors flex items-center justify-center gap-1.5">
+        <svg class="w-3.5 h-3.5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        <span>Reset 3D View</span>
+      </button>
+
+    </aside>
+
+    <!-- BOTTOM FLOATING TOOLBAR: Camera Views, Render Modes, Explode, Shell -->
+    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 spatial-glass px-3.5 py-2 flex flex-wrap items-center justify-center gap-2 sm:gap-4 shadow-2xl max-w-[96vw] overflow-x-auto text-[11px] sm:text-xs">
+      
+      <!-- Viewpoint Presets -->
+      <div class="flex items-center gap-1">
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mr-1">Views:</span>
+        <button class="viewpoint-btn active" data-view="anterior">Front</button>
+        <button class="viewpoint-btn" data-view="posterior">Back</button>
+        <button class="viewpoint-btn" data-view="left">Left</button>
+        <button class="viewpoint-btn" data-view="right">Right</button>
+        <button class="viewpoint-btn" data-view="superior">Top</button>
+      </div>
+
+      <div class="h-4 w-px bg-slate-700"></div>
+
+      <!-- Shading Modes -->
+      <div class="flex items-center gap-1">
+        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mr-1">Mode:</span>
+        <button class="render-mode-btn active" data-mode="standard">Standard PBR</button>
+        <button class="render-mode-btn" data-mode="xray">X-Ray Glow</button>
+        <button class="render-mode-btn" data-mode="ghost">Ghost Skeleton</button>
+      </div>
+
+      <div class="h-4 w-px bg-slate-700"></div>
+
+      <!-- Dissection Explode Slider -->
+      <div class="flex items-center gap-1.5 text-xs">
+        <span class="text-[10px] font-bold text-slate-400 uppercase">Explode:</span>
+        <input type="range" id="explode-slider" min="0" max="100" value="0" class="w-16 h-1 bg-slate-700 rounded cursor-pointer accent-teal-400">
+        <span id="explode-value" class="text-[10px] font-mono text-teal-300 w-6">0%</span>
+      </div>
+
+      <div class="h-4 w-px bg-slate-700"></div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-1.5">
+        <button id="btn-toggle-shell" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors">
+          Toggle Shell
+        </button>
+        <button id="btn-reset-view" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-teal-600 hover:bg-teal-500 text-slate-950 transition-colors">
+          Reset View
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Scripts -->
+  <script src="/js/anatomy.js"></script>
+  <script src="/js/presentation.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Initialize Anatomy Engine
+      const anatomy = new AnatomyExplorer('canvas-3d-container', {
+        enableOrbitControls: true,
+        autoRotate: false,
+        defaultTheme: 'dark',
+        onOrganSelected: (organName, config) => {
+          const pill = document.getElementById('current-view-title');
+          if (pill) pill.innerHTML = `<span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span><span class="text-xs font-bold text-white">${config.name} — Organ Reveal</span>`;
+        }
+      });
+      window.anatomyInstance = anatomy;
+
+      // 2. Presentation Instance
+      const presentation = new NutriSpherePresentation();
+      window.presentationInstance = presentation;
+
+      // 3. Reset Button
+      document.getElementById('btn-reset-view').addEventListener('click', () => {
+        anatomy.resetView();
+        const pill = document.getElementById('current-view-title');
+        if (pill) pill.innerHTML = `<span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span><span class="text-xs font-semibold text-white">Whole Body Overview</span>`;
+      });
+
+      // 4. Toggle Shell
+      document.getElementById('btn-toggle-shell').addEventListener('click', () => {
+        anatomy.toggleBodyShell();
+      });
+
+      // 5. System Filter Buttons
+      document.querySelectorAll('#system-filter-list .sys-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#system-filter-list .sys-btn').forEach(b => {
+            b.classList.remove('active', 'bg-teal-500/20', 'text-teal-300', 'border-teal-500/40');
+            b.classList.add('text-slate-300');
+          });
+          btn.classList.add('active', 'bg-teal-500/20', 'text-teal-300', 'border-teal-500/40');
+          const sys = btn.getAttribute('data-sys');
+          anatomy.setSystemFilter(sys);
+        });
+      });
+
+      // 6. Viewpoint Buttons
+      document.querySelectorAll('.viewpoint-btn[data-view]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const view = btn.getAttribute('data-view');
+          anatomy.setViewpoint(view);
+        });
+      });
+
+      // 7. Visual Render Modes
+      document.querySelectorAll('.render-mode-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const mode = btn.getAttribute('data-mode');
+          anatomy.setVisualMode(mode);
+        });
+      });
+
+      // 8. Dissection Explode Slider
+      const explodeSlider = document.getElementById('explode-slider');
+      const explodeValLabel = document.getElementById('explode-value');
+      if (explodeSlider) {
+        explodeSlider.addEventListener('input', (e) => {
+          const factor = parseFloat(e.target.value) / 100;
+          anatomy.setExplodeFactor(factor);
+          if (explodeValLabel) explodeValLabel.textContent = `${e.target.value}%`;
+        });
+      }
+
+      // 9. Health Story Mode Trigger
+      const storyBtn = document.getElementById('btn-launch-story');
+      if (storyBtn) {
+        storyBtn.addEventListener('click', () => {
+          anatomy.startHealthStory();
+        });
+      }
+
+      // 10. Organ Search Filter
+      const searchInput = document.getElementById('organ-search-input');
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          const q = e.target.value.toLowerCase().trim();
+          document.querySelectorAll('.organ-selector-btn').forEach(card => {
+            const text = card.textContent.toLowerCase();
+            card.style.display = text.includes(q) ? 'block' : 'none';
+          });
+        });
+      }
+
+      // 11. Report Selector & Longitudinal Switching
+      const reportSelector = document.getElementById('report-selector');
+      if (reportSelector) {
+        reportSelector.addEventListener('change', (e) => {
+          const val = e.target.value;
+          if (val.includes('2024')) {
+            // 2024 Baseline
+            anatomy.verifiedBiomarkers['Liver'][0].val = 36;
+            anatomy.verifiedBiomarkers['Liver'][0].flag = 'normal';
+            anatomy.verifiedBiomarkers['Liver'][0].label = 'Within Normal';
+            anatomy.verifiedBiomarkers['Liver'][1].val = 28;
+            anatomy.verifiedBiomarkers['Liver'][1].flag = 'normal';
+            anatomy.verifiedBiomarkers['Liver'][1].label = 'Within Normal';
+            if (window.NutriSphere) NutriSphere.showToast('Loaded 2024 Baseline Encounter (Optimal Transaminases)', 'info');
+          } else if (val.includes('2025')) {
+            // 2025 Follow-up
+            anatomy.verifiedBiomarkers['Liver'][0].val = 48;
+            anatomy.verifiedBiomarkers['Liver'][0].flag = 'high';
+            anatomy.verifiedBiomarkers['Liver'][0].label = 'Borderline';
+            anatomy.verifiedBiomarkers['Liver'][1].val = 38;
+            anatomy.verifiedBiomarkers['Liver'][1].flag = 'high';
+            anatomy.verifiedBiomarkers['Liver'][1].label = 'Borderline';
+            if (window.NutriSphere) NutriSphere.showToast('Loaded 2025 Follow-Up Encounter', 'info');
+          } else {
+            // 2026 Current
+            anatomy.verifiedBiomarkers['Liver'][0].val = 58;
+            anatomy.verifiedBiomarkers['Liver'][0].flag = 'high';
+            anatomy.verifiedBiomarkers['Liver'][0].label = 'Mildly High';
+            anatomy.verifiedBiomarkers['Liver'][1].val = 46;
+            anatomy.verifiedBiomarkers['Liver'][1].flag = 'high';
+            anatomy.verifiedBiomarkers['Liver'][1].label = 'Mildly High';
+            if (window.NutriSphere) NutriSphere.showToast('Loaded 2026 Comprehensive Encounter', 'info');
+          }
+          if (anatomy.activeOrgan) {
+            anatomy.updateOverlayUI(anatomy.activeOrgan, anatomy.organCatalog[anatomy.activeOrgan]);
+          }
+        });
+      }
+
+      // 12. Initial State: URL ?focus= and ?report_id=
+      const urlParams = new URLSearchParams(window.location.search);
+      const focusOrgan = urlParams.get('focus') || 'Liver';
+      const reportId = urlParams.get('report_id');
+      if (reportId && reportSelector) {
+        // If an uploaded report was passed
+        const opt = document.createElement('option');
+        opt.value = reportId;
+        opt.textContent = `Uploaded Report (${reportId.substring(0, 12)}...)`;
+        opt.selected = true;
+        reportSelector.insertBefore(opt, reportSelector.firstChild);
+      }
+      // 13. Tab Switching Function
+      window.switchAnatomyTab = function(tabId) {
+        const tabs = ['explore', 'layers', 'learn', 'history'];
+        tabs.forEach(t => {
+          const pane = document.getElementById(`tab-pane-${t}`);
+          const btn = document.getElementById(`tab-btn-${t}`);
+          if (pane && btn) {
+            if (t === tabId) {
+              pane.classList.remove('hidden');
+              pane.classList.add('flex');
+              btn.classList.add('active', 'bg-teal-600', 'text-white', 'shadow-md');
+              btn.classList.remove('text-slate-400');
+            } else {
+              pane.classList.add('hidden');
+              pane.classList.remove('flex');
+              btn.classList.remove('active', 'bg-teal-600', 'text-white', 'shadow-md');
+              btn.classList.add('text-slate-400');
+            }
+          }
+        });
+        if (tabId === 'history' && window.anatomyInstance && typeof window.anatomyInstance.drawSparkline === 'function') {
+          setTimeout(() => {
+            window.anatomyInstance.drawSparkline('history-sparkline-canvas', [36, 48, 58], 'Liver: ALT (U/L)');
+          }, 60);
+        }
+      };
+
+      // 14. Layers Shell Slider Listener
+      const shellSlider = document.getElementById('layer-shell-slider');
+      const shellOpacityLabel = document.getElementById('shell-opacity-label');
+      if (shellSlider) {
+        shellSlider.addEventListener('input', (e) => {
+          const val = parseFloat(e.target.value) / 100;
+          anatomy.setBodyShellOpacity(val);
+          if (shellOpacityLabel) shellOpacityLabel.textContent = `${e.target.value}%`;
+        });
+      }
+
+      // 15. Left Controls Rail Toggle Function
+      window.toggleLeftRail = function(forceState) {
+        const rail = document.getElementById('anatomy-left-rail');
+        if (!rail) return;
+        const isHidden = rail.classList.contains('-translate-x-[130%]');
+        const shouldOpen = forceState !== undefined ? forceState : isHidden;
+        if (shouldOpen) {
+          rail.classList.remove('-translate-x-[130%]');
+        } else {
+          rail.classList.add('-translate-x-[130%]');
+        }
+      };
+
+      // Auto-collapse left rail on small screens (< 768px) so 3D anatomy is immediately visible
+      if (window.innerWidth < 768) {
+        window.toggleLeftRail(false);
+      }
+    });
+  </script>
+</body>
+</html>

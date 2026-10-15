@@ -1,0 +1,32 @@
+# Python virtual environment
+.venv/
+venv/
+env/
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploads and temporary patient data
+uploads/
+tmp/
+temp/
+
+# Environment and secrets
+.env
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Root screenshots and logs
+*.png
+*.log

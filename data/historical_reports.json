@@ -1,0 +1,177 @@
+{
+  "patient_identifier": "SYNTH-PATIENT-9042",
+  "description": "Multi-year synthetic longitudinal health records for trend analysis.",
+  "series": [
+    {
+      "report_id": "rep_synth_2024",
+      "collection_date": "2024-09-12",
+      "laboratory": "Apex Metropolitan Diagnostics",
+      "markers": {
+        "CBC_HGB": {
+          "value": 14.5,
+          "unit": "g/dL",
+          "flag": "within_reference"
+        },
+        "CBC_WBC": {
+          "value": 6.4,
+          "unit": "10^3/uL",
+          "flag": "within_reference"
+        },
+        "LIV_ALT": {
+          "value": 36.0,
+          "unit": "U/L",
+          "flag": "within_reference"
+        },
+        "LIV_AST": {
+          "value": 28.0,
+          "unit": "U/L",
+          "flag": "within_reference"
+        },
+        "KID_CREAT": {
+          "value": 0.9,
+          "unit": "mg/dL",
+          "flag": "within_reference"
+        },
+        "GLU_FASTING": {
+          "value": 88.0,
+          "unit": "mg/dL",
+          "flag": "within_reference"
+        },
+        "GLU_HBA1C": {
+          "value": 5.2,
+          "unit": "%",
+          "flag": "within_reference"
+        },
+        "LIP_CHOL": {
+          "value": 192.0,
+          "unit": "mg/dL",
+          "flag": "within_reference"
+        },
+        "LIP_LDL": {
+          "value": 118.0,
+          "unit": "mg/dL",
+          "flag": "above_reference"
+        },
+        "VIT_D": {
+          "value": 19.1,
+          "unit": "ng/mL",
+          "flag": "below_reference"
+        }
+      }
+    },
+    {
+      "report_id": "rep_synth_2025",
+      "collection_date": "2025-09-18",
+      "laboratory": "Apex Metropolitan Diagnostics",
+      "markers": {
+        "CBC_HGB": {
+          "value": 14.6,
+          "unit": "g/dL",
+          "flag": "within_reference"
+        },
+        "CBC_WBC": {
+          "value": 6.6,
+          "unit": "10^3/uL",
+          "flag": "within_reference"
+        },
+        "LIV_ALT": {
+          "value": 44.0,
+          "unit": "U/L",
+          "flag": "within_reference"
+        },
+        "LIV_AST": {
+          "value": 32.0,
+          "unit": "U/L",
+          "flag": "within_reference"
+        },
+        "KID_CREAT": {
+          "value": 0.92,
+          "unit": "mg/dL",
+          "flag": "within_reference"
+        },
+        "GLU_FASTING": {
+          "value": 90.0,
+          "unit": "mg/dL",
+          "flag": "within_reference"
+        },
+        "GLU_HBA1C": {
+          "value": 5.3,
+          "unit": "%",
+          "flag": "within_reference"
+        },
+        "LIP_CHOL": {
+          "value": 204.0,
+          "unit": "mg/dL",
+          "flag": "above_reference"
+        },
+        "LIP_LDL": {
+          "value": 126.0,
+          "unit": "mg/dL",
+          "flag": "above_reference"
+        },
+        "VIT_D": {
+          "value": 21.0,
+          "unit": "ng/mL",
+          "flag": "below_reference"
+        }
+      }
+    },
+    {
+      "report_id": "rep_synth_2026",
+      "collection_date": "2026-09-15",
+      "laboratory": "Apex Metropolitan Diagnostics",
+      "markers": {
+        "CBC_HGB": {
+          "value": 14.8,
+          "unit": "g/dL",
+          "flag": "within_reference"
+        },
+        "CBC_WBC": {
+          "value": 6.8,
+          "unit": "10^3/uL",
+          "flag": "within_reference"
+        },
+        "LIV_ALT": {
+          "value": 58.0,
+          "unit": "U/L",
+          "flag": "above_reference"
+        },
+        "LIV_AST": {
+          "value": 38.0,
+          "unit": "U/L",
+          "flag": "within_reference"
+        },
+        "KID_CREAT": {
+          "value": 0.95,
+          "unit": "mg/dL",
+          "flag": "within_reference"
+        },
+        "GLU_FASTING": {
+          "value": 92.0,
+          "unit": "mg/dL",
+          "flag": "within_reference"
+        },
+        "GLU_HBA1C": {
+          "value": 5.4,
+          "unit": "%",
+          "flag": "within_reference"
+        },
+        "LIP_CHOL": {
+          "value": 215.0,
+          "unit": "mg/dL",
+          "flag": "above_reference"
+        },
+        "LIP_LDL": {
+          "value": 138.0,
+          "unit": "mg/dL",
+          "flag": "above_reference"
+        },
+        "VIT_D": {
+          "value": 22.4,
+          "unit": "ng/mL",
+          "flag": "below_reference"
+        }
+      }
+    }
+  ]
+}

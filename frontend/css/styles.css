@@ -1,0 +1,849 @@
+/*
+ * NutriSphere 3D — Professional High-Contrast Clinical & Medical UI Design System
+ * Features:
+ * - High-Contrast Typography: deep obsidian slate (#020617 / #0f172a) for crystal-clear readability
+ * - Dark Clinical Theater Viewport Mode: obsidian backdrop (#090d16) for vibrant anatomical pop
+ * - Saturated Anatomical Palettes: high-contrast organ shaders that stand out clearly
+ * - Interactive 3D HUD Tooltip & Viewpoint Floating Bar
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+
+:root {
+  --bg-app: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f1f5f9;
+  --bg-muted: #e2e8f0;
+  
+  --border-subtle: #cbd5e1;
+  --border-medium: #94a3b8;
+  --border-focus: #0d9488;
+
+  /* High-Contrast Crisp Typography (Deep Obsidian & Charcoal Slate) */
+  --text-primary: #020617;   /* Deep obsidian black */
+  --text-secondary: #0f172a; /* Rich dark slate */
+  --text-muted: #1e293b;     /* High-contrast charcoal slate */
+  --text-light: #334155;     /* Medium-dark slate (never faint) */
+
+  --teal-primary: #0d9488;
+  --teal-hover: #0f766e;
+  --teal-subtle: #f0fdfa;
+  --teal-border: #5eead4;
+
+  --blue-primary: #0284c7;
+  --blue-hover: #0369a1;
+  --blue-subtle: #f0f9ff;
+  --blue-border: #7dd3fc;
+
+  --status-normal-bg: #ecfdf5;
+  --status-normal-text: #064e3b;
+  --status-normal-border: #6ee7b7;
+
+  --status-high-bg: #fffbeb;
+  --status-high-text: #78350f;
+  --status-high-border: #fcd34d;
+
+  --status-urgent-bg: #fef2f2;
+  --status-urgent-text: #7f1d1d;
+  --status-urgent-border: #fca5a5;
+
+  /* NutriSphere X — Official Master Color Palette */
+  --color-graphite: #101419;   /* Deep Graphite Environment */
+  --color-obsidian: #111E2C;   /* Spatial Obsidian Navy */
+  --color-porcelain: #F5F7F8;  /* Soft Crisp Porcelain */
+  --color-teal: #159A92;       /* Precision Medical Teal */
+  --color-teal-glow: #1ad1c6;  /* Luminous Cyan Accent */
+  --color-cyan: #79CFCB;       /* Muted Spatial Cyan */
+  --color-warm-gray: #A9B3BB;  /* Warm Editorial Gray */
+  --color-deep-ink: #182638;   /* Deep Ink Typography */
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.08);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.12), 0 2px 4px -2px rgb(0 0 0 / 0.10);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.15), 0 4px 6px -4px rgb(0 0 0 / 0.10);
+  --shadow-spatial: 0 24px 60px -12px rgba(0, 0, 0, 0.65), 0 0 1px 1px rgba(255, 255, 255, 0.08);
+}
+
+body {
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   HIGH-CONTRAST WCAG AA TYPOGRAPHY SYSTEM (DARK NAVY & CLINICAL PALETTE)
+   Primary text:   #F5F8FF (16.5:1 contrast against #101419)
+   Secondary text: #B8C9DD (10.4:1 contrast)
+   Muted text:     #91A6BC (7.2:1 contrast)
+   Accent text:    #4FE0D3 (12.1:1 contrast)
+   Warning text:   #FBBF24 (11.8:1 contrast)
+   Alert text:     #F87171 (6.5:1 contrast)
+   ========================================================================== */
+
+/* Dark Theme Surface Text Rules (NutriSphere X Dark Navy Theme) */
+body.bg-\[\#101419\],
+.spatial-glass,
+.hud-glass,
+#canvas-3d-container {
+  color: #F5F8FF;
+}
+
+body.bg-\[\#101419\] .text-slate-100,
+.spatial-glass .text-slate-100,
+#canvas-3d-container .text-slate-100 {
+  color: #F5F8FF !important;
+}
+
+body.bg-\[\#101419\] .text-slate-200,
+.spatial-glass .text-slate-200,
+#canvas-3d-container .text-slate-200 {
+  color: #E2E8F0 !important;
+}
+
+body.bg-\[\#101419\] .text-slate-300,
+.spatial-glass .text-slate-300,
+#canvas-3d-container .text-slate-300 {
+  color: #B8C9DD !important;
+  font-weight: 500;
+}
+
+body.bg-\[\#101419\] .text-slate-400,
+.spatial-glass .text-slate-400,
+#canvas-3d-container .text-slate-400 {
+  color: #91A6BC !important;
+  font-weight: 500;
+}
+
+body.bg-\[\#101419\] .text-slate-500,
+.spatial-glass .text-slate-500,
+#canvas-3d-container .text-slate-500 {
+  color: #A0B3C9 !important;
+  font-weight: 500;
+}
+
+/* Light Theme Paper Overrides (for Results table and Medical Cards on white paper) */
+body:not(.bg-\[\#101419\]) .text-slate-700 {
+  color: #0f172a !important;
+  font-weight: 600;
+}
+body:not(.bg-\[\#101419\]) .text-slate-600 {
+  color: #334155 !important;
+  font-weight: 500;
+}
+body:not(.bg-\[\#101419\]) .text-slate-500 {
+  color: #475569 !important;
+  font-weight: 500;
+}
+body:not(.bg-\[\#101419\]) .text-slate-400 {
+  color: #64748b !important;
+  font-weight: 500;
+}
+
+/* Anatomy Sidebar High-Contrast Specific Elements */
+.spatial-glass label,
+.spatial-glass h2,
+.spatial-glass h3,
+.spatial-glass h4 {
+  color: #F5F8FF !important;
+  font-weight: 700;
+}
+
+.spatial-glass .uppercase.tracking-wider {
+  color: #B8C9DD !important;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* Search input & placeholder in dark sidebar */
+#organ-search-input {
+  background: rgba(15, 23, 42, 0.95) !important;
+  color: #F5F8FF !important;
+  border-color: rgba(71, 85, 105, 0.8) !important;
+}
+#organ-search-input::placeholder {
+  color: #8297AF !important;
+  opacity: 1;
+}
+
+/* Tab buttons */
+.tab-btn {
+  color: #B8C9DD !important;
+  background: rgba(30, 41, 59, 0.7);
+  transition: all 0.15s ease;
+}
+.tab-btn:hover {
+  color: #FFFFFF !important;
+  background: rgba(51, 65, 85, 0.9) !important;
+}
+.tab-btn.active {
+  background: #0d9488 !important;
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 12px rgba(13, 148, 136, 0.4);
+}
+
+/* Body System buttons */
+.sys-btn {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(51, 65, 85, 0.65);
+  color: #F5F8FF !important;
+  transition: all 0.15s ease;
+}
+.sys-btn:hover {
+  background: rgba(30, 41, 59, 0.95) !important;
+  border-color: #4FE0D3 !important;
+  color: #FFFFFF !important;
+}
+.sys-btn.active {
+  background: rgba(13, 148, 136, 0.25) !important;
+  border-color: rgba(79, 224, 211, 0.7) !important;
+  color: #4FE0D3 !important;
+  font-weight: 700 !important;
+}
+.sys-btn span:last-child {
+  color: #91A6BC !important;
+  font-weight: 700;
+}
+.sys-btn.active span:last-child {
+  color: #4FE0D3 !important;
+}
+
+/* Organ Quick Pick Cards */
+.organ-selector-btn {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border: 1px solid rgba(51, 65, 85, 0.75) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.organ-selector-btn:hover {
+  border-color: #4FE0D3 !important;
+  background: rgba(13, 148, 136, 0.25) !important;
+  transform: translateY(-1px);
+}
+.organ-selector-btn .text-slate-100 {
+  color: #F5F8FF !important;
+  font-weight: 700 !important;
+}
+.organ-selector-btn .text-amber-400 {
+  color: #FBBF24 !important;
+  font-weight: 600 !important;
+}
+.organ-selector-btn .text-teal-400 {
+  color: #4FE0D3 !important;
+  font-weight: 600 !important;
+}
+.organ-selector-btn .text-rose-400 {
+  color: #F87171 !important;
+  font-weight: 600 !important;
+}
+.organ-selector-btn .text-slate-400 {
+  color: #B8C9DD !important;
+  font-weight: 500 !important;
+}
+
+/* Layer mode buttons */
+.layer-mode-btn {
+  background: rgba(15, 23, 42, 0.8) !important;
+  border: 1px solid rgba(51, 65, 85, 0.7) !important;
+  color: #F5F8FF !important;
+}
+.layer-mode-btn:hover {
+  background: rgba(30, 41, 59, 0.9) !important;
+  border-color: #4FE0D3 !important;
+}
+.layer-mode-btn.active {
+  background: rgba(13, 148, 136, 0.25) !important;
+  border-color: #4FE0D3 !important;
+}
+.layer-mode-btn .text-slate-400 {
+  color: #B8C9DD !important;
+}
+
+/* Dropdown selectors */
+#report-selector,
+#history-year-select {
+  background: #0f172a !important;
+  color: #F5F8FF !important;
+  border: 1px solid rgba(71, 85, 105, 0.8) !important;
+}
+#report-selector option,
+#history-year-select option {
+  background: #0f172a !important;
+  color: #F5F8FF !important;
+}
+
+/* BioSignal cards */
+.biosignal-card {
+  background: rgba(17, 30, 44, 0.95) !important;
+  border: 1px solid rgba(79, 224, 211, 0.35) !important;
+}
+.biosignal-card .text-slate-100 {
+  color: #F5F8FF !important;
+}
+.biosignal-card .text-slate-400 {
+  color: #B8C9DD !important;
+}
+.biosignal-card .text-white {
+  color: #FFFFFF !important;
+}
+.biosignal-card .text-slate-300 {
+  color: #E2E8F0 !important;
+}
+
+p, span, label, td, th {
+  letter-spacing: -0.01em;
+}
+
+/* Medical Surface Cards */
+.medical-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.medical-card-hover:hover {
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-md);
+}
+
+/* Clinical Status Badges (High Contrast) */
+.badge-normal {
+  background-color: var(--status-normal-bg);
+  color: var(--status-normal-text);
+  border: 1px solid var(--status-normal-border);
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.badge-high {
+  background-color: var(--status-high-bg);
+  color: var(--status-high-text);
+  border: 1px solid var(--status-high-border);
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.badge-urgent {
+  background-color: var(--status-urgent-bg);
+  color: var(--status-urgent-text);
+  border: 1.5px solid var(--status-urgent-border);
+  font-weight: 700;
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.badge-unclassified {
+  background-color: #f1f5f9;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* Clinical Table Styling */
+.clinical-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+}
+
+.clinical-table th {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.85rem 1rem;
+  border-bottom: 2px solid #cbd5e1;
+}
+
+.clinical-table td {
+  padding: 0.875rem 1rem;
+  font-size: 0.875rem;
+  color: #0f172a;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: middle;
+}
+
+.clinical-table tr:hover td {
+  background-color: #f1f5f9;
+}
+
+/* 3D Canvas Viewport Container */
+#canvas-3d-container {
+  width: 100%;
+  height: 540px;
+  position: relative;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 30%, #1e293b 0%, #0f172a 60%, #090d16 100%);
+  border: 1.5px solid #334155;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+}
+
+#canvas-3d-container.light-mode {
+  background: radial-gradient(circle at 50% 40%, #ffffff 0%, #f1f5f9 65%, #cbd5e1 100%);
+  border-color: #cbd5e1;
+}
+
+#canvas-3d {
+  width: 100%;
+  height: 100%;
+  display: block;
+  outline: none;
+}
+
+#liver-3d-container {
+  width: 100%;
+  height: 360px;
+  position: relative;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 30%, #1e293b 0%, #0f172a 60%, #090d16 100%);
+  border: 1.5px solid #334155;
+}
+
+/* Floating 3D Interactive HUD Tooltip */
+#anatomy-hud-tooltip {
+  position: absolute;
+  pointer-events: none;
+  z-index: 50;
+  transform: translate(-50%, -125%);
+  background: rgba(10, 15, 29, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(56, 189, 248, 0.75);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.65), 0 0 20px rgba(56, 189, 248, 0.3);
+  border-radius: 0.65rem;
+  padding: 0.65rem 0.9rem;
+  color: #ffffff;
+  min-width: 190px;
+  max-width: 290px;
+  transition: opacity 0.15s ease, transform 0.08s ease;
+}
+
+#anatomy-hud-tooltip.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -110%) scale(0.95);
+}
+
+.hud-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.hud-latin {
+  font-size: 0.72rem;
+  font-style: italic;
+  color: #38bdf8;
+  margin-top: 0.15rem;
+}
+
+.hud-system {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: #0d9488;
+  color: #ffffff;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.25rem;
+  margin-top: 0.35rem;
+  margin-bottom: 0.35rem;
+}
+
+.hud-tests {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.3rem;
+}
+
+.hud-test-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  background: rgba(30, 41, 59, 0.9);
+  color: #e2e8f0;
+  border: 1px solid rgba(71, 85, 105, 0.8);
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.25rem;
+}
+
+.hud-action {
+  font-size: 0.68rem;
+  color: #94a3b8;
+  margin-top: 0.4rem;
+  border-top: 1px solid rgba(51, 65, 85, 0.8);
+  padding-top: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* 3D Viewport Controls Overlay */
+.viewport-overlay-pill {
+  background: rgba(10, 15, 29, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(51, 65, 85, 0.85);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  border-radius: 9999px;
+  padding: 0.35rem 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.light-mode .viewport-overlay-pill {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+/* Interactive Viewpoint Quick Action Buttons */
+.viewpoint-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(10, 15, 29, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(51, 65, 85, 0.8);
+  padding: 0.25rem 0.4rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.viewpoint-btn {
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid rgba(71, 85, 105, 0.7);
+  color: #f1f5f9;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.3rem 0.55rem;
+  border-radius: 0.375rem;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.viewpoint-btn:hover {
+  background: #0d9488;
+  border-color: #14b8a6;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.viewpoint-btn.active {
+  background: #0d9488;
+  border-color: #5eead4;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(13, 148, 136, 0.5);
+}
+
+/* Visual Render Mode Switcher */
+.render-mode-btn {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(71, 85, 105, 0.6);
+  color: #cbd5e1;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.render-mode-btn:hover {
+  background: rgba(51, 65, 85, 0.9);
+  color: #ffffff;
+}
+
+.render-mode-btn.active {
+  background: #0284c7;
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(2, 132, 199, 0.45);
+}
+
+/* Dissection / Explode Control Box */
+.explode-control-box {
+  background: rgba(10, 15, 29, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(51, 65, 85, 0.8);
+  border-radius: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #f1f5f9;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+/* Organ Floating Hotspots & Badges */
+.organ-pill-button {
+  background-color: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.4rem 0.85rem;
+  border-radius: 0.5rem;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.organ-pill-button:hover,
+.organ-pill-button.active {
+  background-color: #0d9488;
+  border-color: #0d9488;
+  color: #ffffff;
+}
+
+/* Range Sliders */
+input[type=range] {
+  accent-color: #0d9488;
+}
+
+/* Modals */
+.modal-backdrop {
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(6px);
+}
+
+/* Accessibility & Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print Styles for Clinical Reports */
+@media print {
+  header, footer, nav, #canvas-3d-container, .no-print {
+    display: none !important;
+  }
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .medical-card {
+    border: 1px solid #000000 !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+}
+
+/* ==========================================================================
+   NUTRISPHERE X — SPATIAL COMPUTING & BODY ATLAS DESIGN SYSTEM
+   Apple Vision Pro inspired frosted acrylic, restrained negative space,
+   and dynamic 3D-to-2D BioSignals connectors.
+   ========================================================================== */
+
+/* Spatial Acrylic Frosted Glass Panels */
+.spatial-glass {
+  background: rgba(17, 30, 44, 0.82);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+}
+
+.spatial-glass-light {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(203, 213, 225, 0.8);
+  box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  border-radius: 1rem;
+}
+
+.spatial-glass-subtle {
+  background: rgba(16, 20, 25, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0.75rem;
+}
+
+.spatial-pill {
+  background: rgba(17, 30, 44, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: #f1f5f9;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spatial-pill:hover {
+  background: rgba(21, 154, 146, 0.25);
+  border-color: rgba(121, 207, 203, 0.5);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.spatial-pill.active {
+  background: #159A92;
+  border-color: #79CFCB;
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(21, 154, 146, 0.45);
+}
+
+/* Spatial BioSignals Dynamic Cards */
+.biosignal-card {
+  background: rgba(17, 30, 44, 0.90);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(121, 207, 203, 0.25);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.biosignal-card:hover {
+  transform: translateY(-2px);
+  border-color: #159A92;
+  box-shadow: 0 15px 35px -5px rgba(21, 154, 146, 0.3);
+}
+
+.biosignal-card.active {
+  border-color: #79CFCB;
+  box-shadow: 0 0 20px rgba(21, 154, 146, 0.5);
+  background: rgba(24, 38, 56, 0.95);
+}
+
+/* Dynamic SVG Connector Line between 3D organ and 2D cards */
+#biosignal-svg-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 25;
+  width: 100%;
+  height: 100%;
+}
+
+.biosignal-connector-line {
+  stroke: #79CFCB;
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+  animation: connectorFlow 25s linear infinite;
+  filter: drop-shadow(0 0 4px rgba(26, 209, 198, 0.5));
+}
+
+@keyframes connectorFlow {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -200; }
+}
+
+/* Full-Screen Immersive Body Atlas Layout */
+.atlas-fullscreen-stage {
+  position: relative;
+  width: 100vw;
+  height: calc(100vh - 4rem);
+  max-height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 35%, #182638 0%, #111E2C 55%, #101419 100%);
+}
+
+/* Floating Presentation & Guided Story Dock */
+.story-dock {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(16, 20, 25, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+}
+
+/* Organ Anchor Marker (Pulsing 3D hotspot in screen space) */
+.organ-anchor-point {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+  background: #79CFCB;
+  box-shadow: 0 0 12px #1ad1c6, 0 0 24px rgba(26, 209, 198, 0.6);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 26;
+  transition: opacity 0.25s ease;
+}
+
+.organ-anchor-point::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 9999px;
+  border: 1.5px solid #79CFCB;
+  animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes scannerBeam {
+  0% { top: 0%; opacity: 0.2; }
+  50% { top: 95%; opacity: 1; }
+  100% { top: 0%; opacity: 0.2; }
+}
+
+.entity-pulse {
+  animation: entityGlow 0.4s ease-out forwards;
+}
+
+@keyframes entityGlow {
+  0% { transform: scale(0.8); opacity: 0; filter: brightness(1.8); }
+  100% { transform: scale(1.0); opacity: 1; filter: brightness(1.0); }
+}
+

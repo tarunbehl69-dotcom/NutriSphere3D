@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NutriSphere Quest — Journey Inside the Human Body (NutriSphere 3D)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="/js/lib/OrbitControls.js"></script>
+  <script src="/js/lib/GLTFLoader.js"></script>
+  <script src="/js/lib/DRACOLoader.js"></script>
+  <script src="/js/lib/gsap.min.js"></script>
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    /* Custom Quest Styling */
+    .quest-canvas-container {
+      position: relative;
+      width: 100%;
+      height: calc(100vh - 128px);
+      min-height: 600px;
+      background: radial-gradient(circle at 50% 40%, #152238 0%, #0c121d 60%, #06090f 100%);
+      overflow: hidden;
+    }
+    .hud-glass {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(51, 65, 85, 0.6);
+    }
+    .hud-glass-accent {
+      background: rgba(13, 148, 136, 0.15);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(20, 184, 166, 0.35);
+    }
+    .pulse-glow {
+      box-shadow: 0 0 25px rgba(20, 184, 166, 0.4);
+    }
+    .xp-bar-glow {
+      box-shadow: 0 0 12px rgba(45, 212, 191, 0.6);
+    }
+    .organ-beacon {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 20;
+    }
+    .organ-beacon:hover {
+      transform: translate(-50%, -50%) scale(1.15);
+    }
+    /* Balanced Plate UI */
+    .plate-quarter {
+      transition: all 0.2s ease;
+    }
+    .plate-quarter:hover {
+      filter: brightness(1.15);
+    }
+    /* Presentation bar */
+    .tour-progress-fill {
+      transition: width 0.3s linear;
+    }
+    /* Smooth custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #14b8a6;
+    }
+  </style>
+</head>
+<body class="bg-[#0a0f18] text-slate-100 min-h-screen flex flex-col antialiased selection:bg-teal-500 selection:text-slate-950 font-sans">
+
+  <!-- Clinical Notice & Disclaimer Banner -->
+  <div class="bg-amber-950/60 border-b border-amber-800/40 px-4 py-1.5 text-[11px] text-amber-300 text-center flex items-center justify-center gap-2">
+    <svg class="w-3.5 h-3.5 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <span><strong>NutriSphere Quest Educational Game:</strong> Points and XP are earned for educational learning, organ exploration, and quiz accuracy. Not medical advice or diagnostic scoring.</span>
+  </div>
+
+  <!-- Top Game HUD Bar -->
+  <header class="hud-glass border-b border-slate-800/90 sticky top-0 z-40 px-4 sm:px-6 h-16 flex items-center justify-between">
+    
+    <!-- Left: Brand Logo & Title -->
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-600 via-teal-500 to-cyan-400 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-teal-500/30">
+        ⚡
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="font-extrabold text-white text-base tracking-tight">NutriSphere Quest</span>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-500/20 text-teal-300 border border-teal-500/40 uppercase tracking-wider">3D Game</span>
+        </div>
+        <p class="text-[11px] text-slate-400 font-medium">Journey Inside the Human Body • Explore, Learn & Level Up</p>
+      </div>
+    </div>
+
+    <!-- Center: Player Status (Level, XP Bar, Missions) -->
+    <div class="hidden md:flex items-center gap-6">
+      <!-- Player Level & Title -->
+      <div class="flex items-center gap-2.5 bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-800">
+        <div id="hud-level-badge" class="w-7 h-7 rounded-lg bg-teal-500/20 text-teal-300 border border-teal-400/40 flex items-center justify-center font-bold text-xs">
+          L2
+        </div>
+        <div>
+          <div id="hud-level-title" class="text-xs font-bold text-white leading-tight">Body Explorer</div>
+          <div class="text-[10px] text-teal-400 font-mono">Rank Tier 2</div>
+        </div>
+      </div>
+
+      <!-- XP Bar with animated progress -->
+      <div class="w-56 flex flex-col gap-1">
+        <div class="flex justify-between items-center text-[11px] font-medium">
+          <span class="text-slate-400">Experience (XP)</span>
+          <span id="hud-xp-text" class="text-teal-300 font-mono font-bold">120 / 250 XP</span>
+        </div>
+        <div class="h-2.5 w-full bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-700/60">
+          <div id="hud-xp-fill" class="h-full bg-gradient-to-r from-teal-500 to-cyan-400 rounded-full xp-bar-glow transition-all duration-700" style="width: 48%;"></div>
+        </div>
+      </div>
+
+      <!-- Missions Counter -->
+      <div class="flex items-center gap-2 bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-800 text-xs">
+        <span class="text-slate-400">Missions:</span>
+        <span id="hud-missions-count" class="font-bold text-teal-400">1 / 7 Done</span>
+      </div>
+    </div>
+
+    <!-- Right: Quick Actions, Badges Modal, Sound, Portal Link -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <!-- Professor 90s Presentation Mode -->
+      <button id="btn-start-presentation" onclick="QuestApp.startPresentationTour()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-purple-900/30 transition-all border border-purple-400/30">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span class="hidden sm:inline">Demo Tour</span>
+      </button>
+
+      <!-- Badges Modal Button -->
+      <button onclick="QuestApp.openAchievementsModal()" class="flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-700 transition-colors">
+        <span class="text-sm">🏆</span>
+        <span class="hidden sm:inline">Badges</span>
+      </button>
+
+      <!-- Sound Toggle -->
+      <button id="btn-sound-toggle" onclick="QuestApp.toggleSound()" class="p-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-700 transition-colors" title="Toggle Game Audio">
+        <svg id="icon-sound-on" class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+        <svg id="icon-sound-off" class="w-4 h-4 text-slate-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/></svg>
+      </button>
+
+      <!-- Return to Healthcare Portal -->
+      <a href="/" class="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors" title="Return to NutriSphere 3D Portal">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        <span class="hidden md:inline">Portal</span>
+      </a>
+    </div>
+
+  </header>
+
+  <!-- Presentation Mode Floating Top Bar (Active during 90s Tour) -->
+  <div id="tour-control-bar" class="hidden hud-glass-accent border-b border-teal-500/40 px-6 py-2.5 z-40 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <span class="w-2.5 h-2.5 rounded-full bg-teal-400 animate-ping"></span>
+      <div>
+        <span class="text-xs font-bold text-teal-300 uppercase tracking-wider">Professor Demo Walkthrough</span>
+        <span id="tour-stage-name" class="text-xs text-white ml-2 font-semibold">1/7: World Map Introduction</span>
+      </div>
+    </div>
+    
+    <!-- Progress Bar -->
+    <div class="flex-1 max-w-md mx-6">
+      <div class="h-2 w-full bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+        <div id="tour-progress-bar" class="h-full bg-teal-400 tour-progress-fill" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <!-- Tour Controls -->
+    <div class="flex items-center gap-2">
+      <button id="btn-tour-pause" onclick="QuestApp.toggleTourPause()" class="px-3 py-1 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700">
+        Pause
+      </button>
+      <button onclick="QuestApp.skipTourStep()" class="px-3 py-1 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700">
+        Next Stage &rarr;
+      </button>
+      <button onclick="QuestApp.stopPresentationTour()" class="px-3 py-1 rounded-lg text-xs font-semibold bg-red-950/80 hover:bg-red-900 text-red-300 border border-red-800/60">
+        Exit Tour
+      </button>
+    </div>
+  </div>
+
+  <!-- Central Stage: 3D Body World Map Viewport -->
+  <div class="quest-canvas-container flex-1 relative" id="quest-viewport">
+    
+    <!-- Canvas Element for Three.js -->
+    <canvas id="quest-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+
+    <!-- 3D HUD Viewport Controls Overlay (Top Left) -->
+    <div class="absolute top-4 left-4 z-20 flex flex-col gap-2">
+      <!-- Active Organ & Region Indicator -->
+      <div class="hud-glass px-3.5 py-2 rounded-xl flex items-center gap-2.5 border border-slate-700/80 shadow-xl">
+        <span class="w-2.5 h-2.5 rounded-full bg-teal-400 animate-pulse"></span>
+        <div>
+          <div id="viewport-organ-title" class="text-xs font-black text-white tracking-wide">THE HUMAN BODY WORLD MAP</div>
+          <div id="viewport-organ-sub" class="text-[10px] text-teal-400 font-mono">Select any organ beacon or dock mission below</div>
+        </div>
+      </div>
+
+      <!-- Quick 3D Controls -->
+      <div class="flex items-center gap-1.5">
+        <button onclick="QuestApp.resetCameraView()" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-700 shadow flex items-center gap-1">
+          <svg class="w-3 h-3 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          Reset View
+        </button>
+        <button id="btn-toggle-spin" onclick="QuestApp.toggleAutoRotate()" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-700 shadow flex items-center gap-1">
+          <svg class="w-3 h-3 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span id="label-auto-rotate">Rotate: On</span>
+        </button>
+        <button onclick="QuestApp.toggleSkinVisibility()" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-700 shadow flex items-center gap-1">
+          <svg class="w-3 h-3 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          <span id="label-skin-transparency">Skin: Glass</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 3D Organ Beacons Overlay Container (Dynamically positioned over 3D coordinates) -->
+    <div id="beacons-overlay-container" class="absolute inset-0 pointer-events-none z-20">
+      <!-- Liver Beacon -->
+      <div id="beacon-liver" onclick="QuestApp.openMission('liver_lab')" class="organ-beacon pointer-events-auto flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-teal-950/90 border border-teal-400/80 shadow-lg text-xs font-bold text-white hover:border-teal-300">
+        <span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span>
+        <span>Liver Lab</span>
+        <span class="text-[10px] text-teal-300 bg-teal-900/60 px-1.5 py-0.2 rounded font-mono">+100 XP</span>
+      </div>
+
+      <!-- Heart Beacon -->
+      <div id="beacon-heart" onclick="QuestApp.openMission('heart_station')" class="organ-beacon pointer-events-auto flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-950/90 border border-rose-400/80 shadow-lg text-xs font-bold text-white hover:border-rose-300">
+        <span class="w-2 h-2 rounded-full bg-rose-400 animate-ping"></span>
+        <span>Heart Station</span>
+        <span class="text-[10px] text-rose-300 bg-rose-900/60 px-1.5 py-0.2 rounded font-mono">+100 XP</span>
+      </div>
+
+      <!-- Kidneys Beacon -->
+      <div id="beacon-kidneys" onclick="QuestApp.openMission('kidney_room')" class="organ-beacon pointer-events-auto flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-950/90 border border-amber-400/80 shadow-lg text-xs font-bold text-white hover:border-amber-300">
+        <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+        <span>Kidney Room</span>
+        <span class="text-[10px] text-amber-300 bg-amber-900/60 px-1.5 py-0.2 rounded font-mono">+100 XP</span>
+      </div>
+
+      <!-- Stomach / Digestive Beacon -->
+      <div id="beacon-stomach" onclick="QuestApp.openMission('digestive_journey')" class="organ-beacon pointer-events-auto flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-950/90 border border-emerald-400/80 shadow-lg text-xs font-bold text-white hover:border-emerald-300">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span>Digestive Highway</span>
+        <span class="text-[10px] text-emerald-300 bg-emerald-900/60 px-1.5 py-0.2 rounded font-mono">+100 XP</span>
+      </div>
+
+      <!-- Brain Beacon -->
+      <div id="beacon-brain" onclick="QuestApp.openMission('alcohol_journey')" class="organ-beacon pointer-events-auto flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-purple-950/90 border border-purple-400/80 shadow-lg text-xs font-bold text-white hover:border-purple-300">
+        <span class="w-2 h-2 rounded-full bg-purple-400 animate-ping"></span>
+        <span>Brain & Alcohol</span>
+        <span class="text-[10px] text-purple-300 bg-purple-900/60 px-1.5 py-0.2 rounded font-mono">+100 XP</span>
+      </div>
+
+      <!-- Report Detective Floating Clue Beacon -->
+      <div id="beacon-report" onclick="QuestApp.openMission('report_detective')" class="organ-beacon pointer-events-auto flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-gradient-to-r from-amber-600 to-yellow-500 border border-amber-300 shadow-2xl text-xs font-black text-slate-950 hover:scale-105">
+        <span class="text-sm">🕵️</span>
+        <span>Report Detective Case</span>
+        <span class="text-[10px] bg-slate-950/80 text-amber-300 px-1.5 py-0.5 rounded font-mono font-bold">+150 XP</span>
+      </div>
+    </div>
+
+    <!-- Mission Briefing Panel (Right-side slideout preview when hovering/selecting) -->
+    <div id="quick-organ-card" class="hidden absolute top-4 right-4 z-20 w-80 hud-glass rounded-2xl p-4 border border-slate-700/80 shadow-2xl">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+        <span id="qcard-title" class="text-xs font-black text-white uppercase tracking-wider">Liver Lab</span>
+        <span id="qcard-xp" class="text-[11px] font-mono font-bold text-teal-400">+100 XP</span>
+      </div>
+      <p id="qcard-desc" class="text-xs text-slate-300 mt-2.5 leading-relaxed">
+        Explore the liver in 3D, understand its 4 core metabolic functions, and decode liver enzymes.
+      </p>
+      <div id="qcard-tags" class="flex flex-wrap gap-1.5 mt-3">
+        <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300">ALT / AST</span>
+        <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300">Bile</span>
+        <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300">Detox</span>
+      </div>
+      <button id="qcard-btn-action" onclick="QuestApp.launchActiveCardMission()" class="w-full mt-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs shadow-lg shadow-teal-500/25 flex items-center justify-center gap-1.5 transition-all">
+        Start Mission &rarr;
+      </button>
+    </div>
+
+    <!-- Bottom Floating World Map Dock: 7 Playable Missions Selector -->
+    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-30 w-[95%] max-w-5xl">
+      <div class="hud-glass rounded-2xl p-2.5 border border-slate-700/80 shadow-2xl flex items-center justify-between gap-2 overflow-x-auto">
+        
+        <!-- Mission 1: Liver Lab -->
+        <button onclick="QuestApp.openMission('liver_lab')" class="mission-dock-btn group flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-900/80 hover:bg-teal-950/70 border border-slate-800 hover:border-teal-500/50 transition-all shrink-0 text-left">
+          <div class="w-8 h-8 rounded-lg bg-teal-500/20 text-teal-300 flex items-center justify-center text-sm font-bold group-hover:scale-110 transition-transform">
+            🧪
+          </div>
+          <div>
+            <div class="text-[11px] font-bold text-white group-hover:text-teal-300 flex items-center gap-1">
+              <span>Liver Lab</span>
+              <span id="badge-done-liver_lab" class="hidden text-teal-400">✓</span>
+            </div>
+            <div class="text-[10px] text-slate-400 font-mono">+100 XP • 5 Steps</div>
+          </div>
+        </button>
+
+        <!-- Mission 2: Heart Station -->
+        <button onclick="QuestApp.openMission('heart_station')" class="mission-dock-btn group flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-900/80 hover:bg-rose-950/70 border border-slate-800 hover:border-rose-500/50 transition-all shrink-0 text-left">
+          <div class="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-300 flex items-center justify-center text-sm font-bold group-hover:scale-110 transition-transform">
+            ❤️
+          </div>
+          <div>
+            <div class="text-[11px] font-bold text-white group-hover:text-rose-300 flex items-center gap-1">
+              <span>Heart Station</span>
+              <span id="badge-done-heart_station" class="hidden text-teal-400">✓</span>
+            </div>
+            <div class="text-[10px] text-slate-400 font-mono">+100 XP • 72 BPM</div>
+          </div>
+        </button>
+
+        <!-- Mission 3: Kidney Room -->
+        <button onclick="QuestApp.openMission('kidney_room')" class="mission-dock-btn group flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-900/80 hover:bg-amber-950/70 border border-slate-800 hover:border-amber-500/50 transition-all shrink-0 text-left">
+          <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center text-sm font-bold group-hover:scale-110 transition-transform">
+            💧
+          </div>
+          <div>
+            <div class="text-[11px] font-bold text-white group-hover:text-amber-300 flex items-center gap-1">
+              <span>Kidney Room</span>
+              <span id="badge-done-kidney_room" class="hidden text-teal-400">✓</span>
+            </div>
+            <div class="text-[10px] text-slate-400 font-mono">+100 XP • Filters</div>
+          </div>
+        </button>
+
+        <!-- Mission 4: Digestive Journey -->
+        <button onclick="QuestApp.openMission('digestive_journey')" class="mission-dock-btn group flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-900/80 hover:bg-emerald-950/70 border border-slate-800 hover:border-emerald-500/50 transition-all shrink-0 text-left">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-sm font-bold group-hover:scale-110 transition-transform">
+            🥗
+          </div>
+          <div>
+            <div class="text-[11px] font-bold text-white group-hover:text-emerald-300 flex items-center gap-1">
+              <span>Digestive Path</span>
+              <span id="badge-done-digestive_journey" class="hidden text-teal-400">✓</span>
+            </div>
+            <div class="text-[10px] text-slate-400 font-mono">+100 XP • Absorption</div>
+          </div>
+        </button>
+
+        <!-- Mission 5: Balanced Plate Challenge -->
+        <button onclick="QuestApp.openMission('nutrition_plate')" class="mission-dock-btn group flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-900/80 hover:bg-lime-950/70 border border-slate-800 hover:border-lime-500/50 transition-all shrink-0 text-left">
+          <div class="w-8 h-8 rounded-lg bg-lime-500/20 text-lime-300 flex items-center justify-center text-sm font-bold group-hover:scale-110 transition-transform">
+            🍽️
+          </div>
+          <div>
+            <div class="text-[11px] font-bold text-white group-hover:text-lime-300 flex items-center gap-1">
+              <span>Balanced Plate</span>
+              <span id="badge-done-nutrition_plate" class="hidden text-teal-400">✓</span>
+            </div>
+            <div class="text-[10px] text-slate-400 font-mono">+100 XP • Indian Meal</div>
+          </div>
+        </button>
+
+        <!-- Mission 6: Alcohol Journey -->
+        <button onclick="QuestApp.openMission('alcohol_journey')" class="mission-dock-btn group flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-900/80 hover:bg-purple-950/70 border border-slate-800 hover:border-purple-500/50 transition-all shrink-0 text-left">
+          <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-300 flex items-center justify-center text-sm font-bold group-hover:scale-110 transition-transform">
+            🍷
+          </div>
+          <div>
+            <div class="text-[11px] font-bold text-white group-hover:text-purple-300 flex items-center gap-1">
+              <span>Alcohol Science</span>
+              <span id="badge-done-alcohol_journey" class="hidden text-teal-400">✓</span>
+            </div>
+            <div class="text-[10px] text-slate-400 font-mono">+100 XP • Clearance</div>
+          </div>
+        </button>
+
+        <!-- Mission 7: Signature Report Detective -->
+        <button onclick="QuestApp.openMission('report_detective')" class="mission-dock-btn group flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-950/80 to-yellow-950/80 hover:from-amber-900 hover:to-yellow-900 border border-amber-600/60 transition-all shrink-0 text-left shadow-lg">
+          <div class="w-8 h-8 rounded-lg bg-amber-500/30 text-amber-200 flex items-center justify-center text-sm font-bold group-hover:scale-110 transition-transform">
+            🕵️
+          </div>
+          <div>
+            <div class="text-[11px] font-black text-amber-300 group-hover:text-amber-200 flex items-center gap-1">
+              <span>Report Detective</span>
+              <span id="badge-done-report_detective" class="hidden text-teal-400">✓</span>
+            </div>
+            <div class="text-[10px] text-amber-200/80 font-mono font-bold">+150 XP • Final Case</div>
+          </div>
+        </button>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Interactive Mission Modal (Main Game Mission Play Environment) -->
+  <div id="modal-mission" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
+        <div class="flex items-center gap-3">
+          <div id="modal-m-icon" class="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-300 flex items-center justify-center text-xl font-bold border border-teal-500/30">
+            🧪
+          </div>
+          <div>
+            <h2 id="modal-m-title" class="text-lg font-black text-white">Mission 1: The Liver Lab</h2>
+            <div class="flex items-center gap-2 text-xs text-slate-400">
+              <span id="modal-m-badge" class="font-medium text-teal-400">Hepatic Station</span>
+              <span>•</span>
+              <span id="modal-m-organ">Organ: Liver</span>
+              <span>•</span>
+              <span id="modal-m-xp" class="text-teal-300 font-mono font-bold">+100 XP</span>
+            </div>
+          </div>
+        </div>
+        <button onclick="QuestApp.closeMissionModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors">
+          ✕
+        </button>
+      </div>
+
+      <!-- Modal Stage Tabs Bar -->
+      <div class="px-6 py-2 bg-slate-950/30 border-b border-slate-800 flex items-center gap-2 overflow-x-auto text-xs">
+        <button id="tab-btn-intro" onclick="QuestApp.setModalStage('intro')" class="px-3 py-1.5 rounded-lg font-semibold bg-teal-500 text-slate-950 transition-all">
+          1. 3D Inspection & Roles
+        </button>
+        <button id="tab-btn-tests" onclick="QuestApp.setModalStage('tests')" class="px-3 py-1.5 rounded-lg font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all">
+          2. Understand the Tests
+        </button>
+        <button id="tab-btn-challenge" onclick="QuestApp.setModalStage('challenge')" class="px-3 py-1.5 rounded-lg font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all">
+          3. Interactive Challenge
+        </button>
+        <button id="tab-btn-quiz" onclick="QuestApp.setModalStage('quiz')" class="px-3 py-1.5 rounded-lg font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all">
+          4. Knowledge Check
+        </button>
+      </div>
+
+      <!-- Modal Body (Dynamic Stages Content) -->
+      <div id="modal-stage-body" class="p-6 overflow-y-auto flex-1 text-sm text-slate-300 space-y-6">
+        <!-- Content injected dynamically by quest.js based on selected mission and stage -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-3.5 border-t border-slate-800 bg-slate-950/60 flex items-center justify-between">
+        <div class="text-xs text-slate-400 flex items-center gap-1.5">
+          <span>Audio:</span>
+          <span class="text-teal-400 font-mono">Synthesizer Active</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <button id="btn-modal-prev" onclick="QuestApp.prevStage()" class="hidden px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors">
+            &larr; Previous Stage
+          </button>
+          <button id="btn-modal-next" onclick="QuestApp.nextStage()" class="px-5 py-2 rounded-xl text-xs font-bold bg-teal-500 hover:bg-teal-400 text-slate-950 shadow-lg shadow-teal-500/20 transition-all">
+            Continue &rarr;
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Achievements & Progression Modal -->
+  <div id="modal-achievements" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      
+      <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
+        <div class="flex items-center gap-2.5">
+          <span class="text-2xl">🏆</span>
+          <div>
+            <h2 class="text-lg font-black text-white">Explorer Achievements & Rank</h2>
+            <p class="text-xs text-slate-400">Unlock badges by exploring organs, mastering quizzes, and solving clinical cases</p>
+          </div>
+        </div>
+        <button onclick="QuestApp.closeAchievementsModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors">
+          ✕
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-6 flex-1">
+        <!-- Player Level Summary Card -->
+        <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div id="ach-level-badge" class="w-12 h-12 rounded-xl bg-teal-500/20 text-teal-300 border border-teal-400/40 flex items-center justify-center font-black text-lg">
+              L2
+            </div>
+            <div>
+              <div id="ach-level-title" class="text-sm font-bold text-white">Body Explorer</div>
+              <div id="ach-level-xp" class="text-xs text-teal-400 font-mono">120 / 250 XP to Level 3</div>
+            </div>
+          </div>
+          <button onclick="QuestApp.resetDemoProgress()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-red-950 text-slate-400 hover:text-red-300 border border-slate-700 hover:border-red-800 transition-colors">
+            Reset Demo State
+          </button>
+        </div>
+
+        <!-- Badges Grid -->
+        <div>
+          <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">Earned Badges</h3>
+          <div id="achievements-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- Badges rendered dynamically -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Victory / Level Up Celebration Toast -->
+  <div id="toast-celebration" class="hidden fixed bottom-24 right-6 z-50 bg-gradient-to-r from-teal-900 to-slate-900 border border-teal-400/80 p-4 rounded-2xl shadow-2xl flex items-center gap-3 animate-bounce">
+    <div class="text-3xl">🎉</div>
+    <div>
+      <div id="toast-title" class="text-sm font-black text-white">Level Up! Rank Tier 2</div>
+      <div id="toast-msg" class="text-xs text-teal-300">You earned +100 XP and unlocked Body Explorer!</div>
+    </div>
+  </div>
+
+  <!-- Load Game Engine -->
+  <script src="/js/quest.js"></script>
+</body>
+</html>

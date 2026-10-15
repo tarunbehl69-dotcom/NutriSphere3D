@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food-First Indian Nutrition & Recovery — NutriSphere 3D</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased">
+
+  <!-- Clinical Navigation Bar -->
+  <header class="border-b border-slate-200 bg-white/95 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="/" class="w-9 h-9 rounded-lg bg-teal-600 flex items-center justify-center font-bold text-white text-lg shadow-sm">
+          N
+        </a>
+        <div>
+          <a href="/" class="font-bold text-lg text-slate-900 tracking-tight">NutriSphere <span class="text-teal-600">3D</span></a>
+          <span class="text-xs px-2 py-0.5 ml-1 rounded bg-teal-50 text-teal-700 border border-teal-200 font-medium">Nutrition Guide</span>
+        </div>
+      </div>
+
+      <nav class="hidden lg:flex items-center gap-6 text-sm font-medium">
+        <a href="/" class="text-slate-600 hover:text-teal-600 transition-colors">Home</a>
+        <a href="/upload" class="text-slate-600 hover:text-teal-600 transition-colors">Upload Report</a>
+        <a href="/anatomy" class="text-slate-600 hover:text-teal-600 transition-colors">3D Anatomy</a>
+        <a href="/results" class="text-slate-600 hover:text-teal-600 transition-colors">Laboratory Results</a>
+        <a href="/dashboard" class="text-slate-600 hover:text-teal-600 transition-colors">Health Dashboard</a>
+        <a href="/nutrition" class="text-teal-700 font-semibold border-b-2 border-teal-600 pb-1">Nutrition</a>
+        <a href="/alcohol" class="text-slate-600 hover:text-teal-600 transition-colors">Alcohol & Health</a>
+        <a href="/games" class="text-slate-600 hover:text-teal-600 transition-colors">3D Health Games</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <button onclick="window.presentationInstance && window.presentationInstance.startTour()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          Presentation
+        </button>
+        <a href="/anatomy" class="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors">
+          3D Anatomy Explorer
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Clinical & Nutritional Disclaimer -->
+  <div class="bg-teal-50 border-b border-teal-200 px-4 py-2.5 text-xs text-teal-900 text-center flex items-center justify-center gap-2">
+    <svg class="w-4 h-4 text-teal-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <span><strong>Nutritional Guidance Disclaimer:</strong> NutriSphere 3D provides food-first educational suggestions rooted in Indian culinary traditions. These are not clinical medical nutrition therapies or prescriptions. Always consult a certified dietitian or physician.</span>
+  </div>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex flex-col gap-8">
+    
+    <!-- Header / Title -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 text-teal-800 border border-teal-200 text-xs font-medium w-fit mb-2">
+          <span class="w-2 h-2 rounded-full bg-teal-500"></span>
+          Culturally Grounded Whole Food Science
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          Food-First Indian Nutrition: <span class="text-teal-600">Biomarker-Linked Recovery</span>
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-500 max-w-3xl mt-1 leading-relaxed">
+          Tailor nutrient-dense Indian meal plans across Vegetarian, Vegan, Jain, and Non-Vegetarian patterns. All meals are dynamically filtered for allergies and linked to your lab report findings.
+        </p>
+      </div>
+
+      <!-- Report Link Selector -->
+      <div class="flex items-center gap-2 bg-white p-2 rounded-xl border border-slate-200 shadow-sm">
+        <span class="text-xs text-slate-500 font-medium pl-2">Sync Report:</span>
+        <select id="nutrition-report-select" class="bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-teal-500">
+          <option value="rep_demo_2026_001">rep_demo_2026_001 (Rohan Sharma)</option>
+        </select>
+        <button id="btn-sync-nutrition" class="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg text-xs transition-colors">
+          Update
+        </button>
+      </div>
+    </div>
+
+    <!-- Dietary Filter Control Bar -->
+    <div class="medical-card p-6 flex flex-col gap-6">
+      
+      <!-- Pattern Tabs -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+        <div>
+          <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold block mb-2">Dietary Pattern</span>
+          <div class="flex flex-wrap gap-2" id="diet-tabs">
+            <button class="diet-tab-btn active px-4 py-2 rounded-lg text-xs font-semibold transition-all bg-teal-600 text-white shadow-sm" data-diet="vegetarian">
+              Indian Vegetarian
+            </button>
+            <button class="diet-tab-btn px-4 py-2 rounded-lg text-xs font-medium transition-all bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200" data-diet="vegan">
+              Indian Vegan
+            </button>
+            <button class="diet-tab-btn px-4 py-2 rounded-lg text-xs font-medium transition-all bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200" data-diet="jain">
+              Jain Diet (Strict No Root Veg)
+            </button>
+            <button class="diet-tab-btn px-4 py-2 rounded-lg text-xs font-medium transition-all bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200" data-diet="non-vegetarian">
+              Non-Vegetarian
+            </button>
+          </div>
+        </div>
+
+        <!-- Pattern Description Callout -->
+        <div id="diet-pattern-note" class="p-3 rounded-lg bg-teal-50 border border-teal-200 text-xs text-teal-900 max-w-sm">
+          <span class="font-bold">Indian Vegetarian:</span> Plant-rich pulses, seasonal vegetables, whole grains, nuts, and dairy (paneer, dahi).
+        </div>
+      </div>
+
+      <!-- Allergy & Restriction Checkbox Chips -->
+      <div class="flex flex-col gap-2">
+        <span class="text-xs text-slate-500 uppercase tracking-wider font-semibold">Exclude Allergens / Intolerances</span>
+        <div class="flex flex-wrap gap-2">
+          <label class="allergy-chip flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 hover:border-slate-300 text-xs text-slate-700 cursor-pointer transition-colors">
+            <input type="checkbox" value="dairy" class="rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+            <span>Dairy-Free (No milk, paneer, dahi)</span>
+          </label>
+          <label class="allergy-chip flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 hover:border-slate-300 text-xs text-slate-700 cursor-pointer transition-colors">
+            <input type="checkbox" value="gluten" class="rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+            <span>Gluten-Free (Ragi, Jowar, Bajra only)</span>
+          </label>
+          <label class="allergy-chip flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 hover:border-slate-300 text-xs text-slate-700 cursor-pointer transition-colors">
+            <input type="checkbox" value="peanuts" class="rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+            <span>Peanut / Tree-Nut Free</span>
+          </label>
+          <label class="allergy-chip flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 hover:border-slate-300 text-xs text-slate-700 cursor-pointer transition-colors">
+            <input type="checkbox" value="soy" class="rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+            <span>Soy-Free</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Biomarker-Linked Nutritional Strategies Banner -->
+    <div id="biomarker-adaptations-panel" class="medical-card p-5 border-teal-200 flex flex-col gap-3">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-teal-600"></span>
+          Report-Linked Nutritional Strategies (Synthesized for Rohan Sharma)
+        </h3>
+        <span class="badge-normal text-xs font-mono">3 Lab Adaptations</span>
+      </div>
+      <div id="biomarker-adaptations-list" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+        <!-- Filled dynamically by nutrition.js -->
+      </div>
+    </div>
+
+    <!-- Daily Meal Plan Cards (Breakfast, Lunch, Dinner, Snack) -->
+    <div class="flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
+          <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          Whole-Food Daily Meal Blueprint
+        </h3>
+        <span id="plan-diet-badge" class="badge-normal text-xs font-mono">Vegetarian Plan</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="meal-cards-container">
+        <!-- Dynamic Meal Cards -->
+      </div>
+    </div>
+
+    <!-- Indian Superfoods Spotlight Section -->
+    <div class="medical-card p-6 flex flex-col gap-5">
+      <div class="border-b border-slate-200 pb-3 flex items-center justify-between">
+        <div>
+          <h3 class="font-bold text-slate-900 text-base flex items-center gap-2 text-teal-700">
+            <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+            Indian Culinary Superfoods & Functional Biochemistry
+          </h3>
+          <p class="text-xs text-slate-500">Nutrient-dense whole foods deeply anchored in traditional regional cooking.</p>
+        </div>
+        <span class="badge-normal text-xs font-mono">Whole Foods</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 text-xs">
+        
+        <!-- Superfood 1: Amla -->
+        <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 hover:border-teal-400 transition-all flex flex-col justify-between">
+          <div>
+            <div class="w-8 h-8 rounded-lg bg-teal-100 text-teal-800 flex items-center justify-center font-bold mb-2">A</div>
+            <h4 class="font-bold text-slate-900 text-sm">Amla (Gooseberry)</h4>
+            <div class="text-[11px] text-teal-700 font-medium mb-1.5">Vitamin C & Antioxidants</div>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              Contains 20x the vitamin C of an orange. Enhances intestinal absorption of non-heme iron from palak and lentils.
+            </p>
+          </div>
+          <div class="mt-3 text-[10px] text-slate-400 font-mono">Pairs: Palak, Moong</div>
+        </div>
+
+        <!-- Superfood 2: Turmeric -->
+        <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 hover:border-amber-400 transition-all flex flex-col justify-between">
+          <div>
+            <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold mb-2">T</div>
+            <h4 class="font-bold text-slate-900 text-sm">Turmeric (Haldi)</h4>
+            <div class="text-[11px] text-amber-700 font-medium mb-1.5">Curcumin Polyphenols</div>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              Supports hepatic antioxidant defenses and nuclear factor-kappa B modulation. Always pair with black pepper (piperine) for 2000% higher bioavailability.
+            </p>
+          </div>
+          <div class="mt-3 text-[10px] text-slate-400 font-mono">Pairs: Pepper, Dal</div>
+        </div>
+
+        <!-- Superfood 3: Ragi -->
+        <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 hover:border-sky-400 transition-all flex flex-col justify-between">
+          <div>
+            <div class="w-8 h-8 rounded-lg bg-sky-100 text-sky-800 flex items-center justify-center font-bold mb-2">R</div>
+            <h4 class="font-bold text-slate-900 text-sm">Ragi (Finger Millet)</h4>
+            <div class="text-[11px] text-sky-700 font-medium mb-1.5">Calcium & Low GI Carb</div>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              Exceptional calcium content (344 mg/100g) and slow-digesting resistant starch for steady postprandial glucose regulation.
+            </p>
+          </div>
+          <div class="mt-3 text-[10px] text-slate-400 font-mono">Pairs: Buttermilk, Dosa</div>
+        </div>
+
+        <!-- Superfood 4: Sprouted Moong -->
+        <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 hover:border-teal-400 transition-all flex flex-col justify-between">
+          <div>
+            <div class="w-8 h-8 rounded-lg bg-teal-100 text-teal-800 flex items-center justify-center font-bold mb-2">M</div>
+            <h4 class="font-bold text-slate-900 text-sm">Sprouted Moong</h4>
+            <div class="text-[11px] text-teal-700 font-medium mb-1.5">Bioavailable Protein</div>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              Sprouting deactivates phytates, boosting bioavailability of zinc, iron, and folate. Highly recommended for Jain and vegan profiles.
+            </p>
+          </div>
+          <div class="mt-3 text-[10px] text-slate-400 font-mono">Pairs: Cumin, Lemon</div>
+        </div>
+
+        <!-- Superfood 5: Drumstick Leaves (Moringa) -->
+        <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 hover:border-emerald-400 transition-all flex flex-col justify-between">
+          <div>
+            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold mb-2">D</div>
+            <h4 class="font-bold text-slate-900 text-sm">Moringa (Sahjan)</h4>
+            <div class="text-[11px] text-emerald-700 font-medium mb-1.5">Micro-Nutrient Density</div>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              Abundant in plant-based iron, vitamin A, potassium, and quercetin. Traditional addition to sambar and lentil preparations.
+            </p>
+          </div>
+          <div class="mt-3 text-[10px] text-slate-400 font-mono">Pairs: Sambar, Rasam</div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Clinical Footer -->
+  <footer class="border-t border-slate-200 bg-white mt-12 py-8 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <span class="font-bold text-slate-800">NutriSphere 3D</span>
+        <span>• Healthcare Informatics Project (PM02)</span>
+      </div>
+      <div class="flex items-center gap-4 text-slate-600">
+        <a href="/" class="hover:text-teal-600">Home</a>
+        <a href="/upload" class="hover:text-teal-600">Upload</a>
+        <a href="/anatomy" class="hover:text-teal-600">3D Anatomy</a>
+        <a href="/results" class="hover:text-teal-600">Results</a>
+        <a href="/alcohol" class="hover:text-teal-600">Alcohol</a>
+        <a href="/dashboard" class="hover:text-teal-600">Dashboard</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/app.js"></script>
+  <script src="/js/nutrition.js"></script>
+  <script src="/js/presentation.js"></script>
+</body>
+</html>
