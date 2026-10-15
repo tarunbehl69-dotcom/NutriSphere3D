@@ -707,6 +707,9 @@ class AnatomyExplorer {
       }
     ];
 
+    this.loadedSystemsCount = 0;
+    this.totalSystemsCount = systemManifest.length;
+
     systemManifest.forEach((sys) => {
       loader.load(sys.file, (gltf) => {
         const model = gltf.scene;
@@ -1061,6 +1064,13 @@ class AnatomyExplorer {
         });
 
         this.masterGroup.add(model);
+        this.loadedSystemsCount = (this.loadedSystemsCount || 0) + 1;
+
+        // If an organ was selected before this system finished loading, re-apply the reveal
+        if (this.activeOrgan || this.pendingOrganSelection) {
+          const target = this.pendingOrganSelection || this.activeOrgan;
+          this.triggerOrganReveal(target, false);
+        }
       }, undefined, (err) => {
         console.warn(`Could not load ${sys.file}:`, err);
       });
@@ -1241,31 +1251,111 @@ class AnatomyExplorer {
       return false;
     };
 
-    // 1. Visual Highlighting & Non-Relevant Organ Dimming
-    const selectedColor = new THREE.Color(config.color);
-    const emissiveHighlight = new THREE.Color(0x159a92); // Precision Medical Teal (#159A92)
+    const organToSystemMap = {
+      'liver': 'digestive',
+      'heart': 'cardiovascular',
+      'lungs': 'respiratory',
+      'stomach': 'digestive',
+      'pancreas': 'digestive',
+      'spleen': 'spleen',
+      'left_kidney': 'renal',
+      'right_kidney': 'renal',
+      'kidneys': 'renal',
+      'small_intestine': 'digestive',
+      'large_intestine': 'digestive',
+      'thyroid': 'endocrine',
+      'urinary_bladder': 'renal',
+      'brain': 'nervous',
+      'spine': 'skeletal'
+    };
+    const primarySys = organToSystemMap[canonicalKey] || 'all';
 
+    // 1. Ensure all system groups are visible so that selected organ meshes and contextual anatomy are rendered
+    this.activeSystemFilter = 'all';
+    Object.keys(this.systems).forEach(sysId => {
+      if (this.systems[sysId]) {
+        if (this.isIsolated) {
+          const isTarget = (sysId === primarySys) || (canonicalKey === 'pancreas' && sysId === 'endocrine') || (canonicalKey === 'spleen' && sysId === 'spleen');
+          this.systems[sysId].visible = isTarget;
+        } else {
+          this.systems[sysId].visible = true;
+        }
+      }
+    });
+
+    // Sync UI System Filter Buttons and Organ Jump Cards
+    if (typeof document !== 'undefined') {
+      const filterSys = (primarySys === 'spleen') ? 'all' : primarySys;
+      document.querySelectorAll('#system-filter-list .sys-btn').forEach(btn => {
+        const btnSys = btn.getAttribute('data-sys');
+        if (btnSys === filterSys || (filterSys === 'all' && btnSys === 'all')) {
+          btn.classList.add('active', 'bg-teal-500/20', 'text-teal-300', 'border-teal-500/40');
+          btn.classList.remove('text-slate-300');
+        } else {
+          btn.classList.remove('active', 'bg-teal-500/20', 'text-teal-300', 'border-teal-500/40');
+          btn.classList.add('text-slate-300');
+        }
+      });
+
+      document.querySelectorAll('.organ-selector-btn').forEach(btn => {
+        const text = btn.textContent.toLowerCase();
+        const matches = text.includes(canonicalKey.replace('_', ' ')) || text.includes(config.name.toLowerCase());
+        if (matches) {
+          btn.classList.add('border-teal-400', 'bg-teal-950/90', 'ring-2', 'ring-teal-400/60');
+          btn.classList.remove('border-slate-700/80', 'bg-slate-900/80');
+        } else {
+          btn.classList.remove('border-teal-400', 'bg-teal-950/90', 'ring-2', 'ring-teal-400/60');
+          btn.classList.add('border-slate-700/80', 'bg-slate-900/80');
+        }
+      });
+    }
+
+    // 2. Highlighting & Emissive Shading
+    const selectedColor = new THREE.Color(config.color);
+    const emissiveHighlight = new THREE.Color(config.emissive || config.color);
+
+    let matchCount = 0;
     this.meshToOrganName.forEach((orgKey, mesh) => {
       if (isMatchingOrgan(orgKey)) {
+        matchCount++;
         mesh.visible = true;
+
+        // Ensure all ancestor nodes are visible
+        let p = mesh.parent;
+        while (p && p !== this.scene) {
+          p.visible = true;
+          p = p.parent;
+        }
+
         mesh.material.transparent = false;
         mesh.material.opacity = 1.0;
         mesh.material.color.copy(selectedColor);
         mesh.material.emissive.copy(emissiveHighlight);
-        mesh.material.emissiveIntensity = 0.45;
+        mesh.material.emissiveIntensity = 0.75; // Brilliant high-contrast highlight
+        mesh.material.depthTest = true;
+        mesh.material.depthWrite = true;
+        mesh.renderOrder = 20; // Forefront rendering
       } else {
         if (this.isIsolated) {
           mesh.visible = false;
         } else {
           mesh.visible = true;
           mesh.material.transparent = true;
-          mesh.material.opacity = 0.15; // Soft ethereal background dimming
+          mesh.material.opacity = 0.10; // Ethereal background dimming
           mesh.material.emissiveIntensity = 0.0;
+          mesh.material.depthWrite = false; // Background organs never block the active organ
+          mesh.renderOrder = 0;
         }
       }
     });
 
-    // Also dim non-organ skeletal bones (like anterior ribs) and peripheral vessels so selected organ is clearly visible
+    if (matchCount === 0) {
+      this.pendingOrganSelection = canonicalKey;
+    } else {
+      this.pendingOrganSelection = null;
+    }
+
+    // 3. Dim non-organ skeletal bones (like anterior ribs) so active organ is crystal clear without depth occlusion
     Object.keys(this.systems).forEach(sysId => {
       if (sysId !== 'regional') {
         this.systems[sysId].traverse(child => {
@@ -1273,25 +1363,43 @@ class AnatomyExplorer {
             if (this.isIsolated) {
               child.visible = false;
             } else {
+              child.visible = true;
               child.material.transparent = true;
-              child.material.opacity = 0.12;
+              child.material.opacity = 0.10;
+              child.material.emissiveIntensity = 0.0;
+              child.material.depthWrite = false; // CRITICAL: Disabling depthWrite prevents ribs from occluding internal organs
+              child.renderOrder = 0;
             }
           }
         });
       }
     });
 
-    // 2. Smooth Cinematic Camera Tween: frame organ in the open center of the viewport
+    // 4. Ethereal glass body shell
+    if (this.bodyShell) {
+      this.bodyShell.traverse(child => {
+        if (child.isMesh) {
+          child.visible = this.bodyShellVisible && !this.isIsolated;
+          if (child.material) {
+            child.material.transparent = true;
+            child.material.opacity = 0.12;
+            child.material.depthWrite = false;
+          }
+        }
+      });
+    }
+
+    // 5. Smooth Cinematic Camera Tween: frame organ in the open center of the viewport
     const framedPos = [config.cameraPos[0] + 0.12, config.cameraPos[1], config.cameraPos[2]];
     const framedTarget = [config.cameraTarget[0] + 0.12, config.cameraTarget[1], config.cameraTarget[2]];
     this.transitionCamera(framedPos, framedTarget, 0.95);
 
-    // 3. Trigger External Callback (for lab table filtering and sidebars)
+    // 6. Trigger External Callback (for lab table filtering and sidebars)
     if (triggerCallback && typeof this.options.onOrganSelected === 'function') {
       this.options.onOrganSelected(config.name, config);
     }
 
-    // 4. Update UI labels, BioSignals spatial cards, and dynamic SVG connector
+    // 7. Update UI labels, BioSignals spatial cards, and dynamic SVG connector
     this.updateOverlayUI(organName, config);
   }
 
@@ -1513,11 +1621,30 @@ class AnatomyExplorer {
 
   resetView() {
     this.activeOrgan = null;
+    this.pendingOrganSelection = null;
     this.isIsolated = false;
+    this.activeSystemFilter = 'all';
 
     // Clear dynamic anchor & connector
     if (this.anchorMarker) this.anchorMarker.classList.add('opacity-0');
     if (this.connectorPath) this.connectorPath.setAttribute('d', '');
+
+    // Reset UI System Filter and Organ Jump Cards
+    if (typeof document !== 'undefined') {
+      document.querySelectorAll('#system-filter-list .sys-btn').forEach(btn => {
+        if (btn.getAttribute('data-sys') === 'all') {
+          btn.classList.add('active', 'bg-teal-500/20', 'text-teal-300', 'border-teal-500/40');
+          btn.classList.remove('text-slate-300');
+        } else {
+          btn.classList.remove('active', 'bg-teal-500/20', 'text-teal-300', 'border-teal-500/40');
+          btn.classList.add('text-slate-300');
+        }
+      });
+      document.querySelectorAll('.organ-selector-btn').forEach(btn => {
+        btn.classList.remove('border-teal-400', 'bg-teal-950/90', 'ring-2', 'ring-teal-400/60');
+        btn.classList.add('border-slate-700/80', 'bg-slate-900/80');
+      });
+    }
 
     // Restore all organ materials and full visibility
     this.meshToOrganName.forEach((orgKey, mesh) => {
@@ -1526,10 +1653,13 @@ class AnatomyExplorer {
       if (mesh.userData.isTranslucent) {
         mesh.material.transparent = true;
         mesh.material.opacity = mesh.userData.defaultOpacity || 0.40;
+        mesh.material.depthWrite = !mesh.userData.isShell;
       } else {
         mesh.material.transparent = false;
         mesh.material.opacity = 1.0;
+        mesh.material.depthWrite = true;
       }
+      mesh.renderOrder = 0;
       mesh.material.color.setHex(defaultCol);
       mesh.material.emissiveIntensity = mesh.userData.defaultEmissive || 0.0;
     });
@@ -1540,14 +1670,17 @@ class AnatomyExplorer {
       this.systems[sysId].traverse((child) => {
         if (child.isMesh) {
           child.visible = true;
+          child.renderOrder = 0;
           if (child.userData.isTranslucent) {
             child.material.transparent = true;
             child.material.opacity = child.userData.defaultOpacity || 0.40;
+            child.material.depthWrite = !child.userData.isShell;
           } else if (child.userData.organName) {
             // Already handled in meshToOrganName
           } else {
             child.material.transparent = false;
             child.material.opacity = 1.0;
+            child.material.depthWrite = true;
           }
         }
       });
@@ -1606,6 +1739,27 @@ class AnatomyExplorer {
         systemObj.visible = match;
       }
     });
+
+    // If an organ was active but does not belong to this filtered system, clear the active organ
+    if (this.activeOrgan && systemName !== 'all') {
+      const canonical = (window.resolveCanonicalOrganId && window.resolveCanonicalOrganId(this.activeOrgan)) || this.activeOrgan.toLowerCase();
+      const organToSystemMap = {
+        'liver': 'digestive', 'heart': 'cardiovascular', 'lungs': 'respiratory',
+        'stomach': 'digestive', 'pancreas': 'digestive', 'spleen': 'spleen',
+        'left_kidney': 'renal', 'right_kidney': 'renal', 'kidneys': 'renal',
+        'small_intestine': 'digestive', 'large_intestine': 'digestive',
+        'thyroid': 'endocrine', 'urinary_bladder': 'renal', 'brain': 'nervous',
+        'spine': 'skeletal'
+      };
+      const organSys = organToSystemMap[canonical];
+      if (organSys && organSys !== systemName && !(canonical === 'pancreas' && systemName === 'endocrine')) {
+        this.activeOrgan = null;
+        if (this.anchorMarker) this.anchorMarker.classList.add('opacity-0');
+        if (this.connectorPath) this.connectorPath.setAttribute('d', '');
+        const detailCard = document.getElementById('organ-detail-panel');
+        if (detailCard) detailCard.classList.add('hidden');
+      }
+    }
   }
 
   // --- 3D ANATOMICAL LAYERS ---
