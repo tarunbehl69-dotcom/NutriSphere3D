@@ -85,6 +85,20 @@
       </div>
     </div>
 
+    <!-- Organ Focus Banner (When navigating from 3D Anatomy) -->
+    <div id="focus-organ-banner" class="hidden p-4 rounded-xl bg-amber-950/60 border border-amber-500/40 text-xs text-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md">
+      <div class="flex items-center gap-2.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+        <div>
+          <span class="font-bold text-white text-sm" id="focus-organ-title">Focused Organ Analysis</span>
+          <p class="text-xs text-amber-300 mt-0.5" id="focus-organ-desc"></p>
+        </div>
+      </div>
+      <a href="/anatomy" class="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-semibold text-xs whitespace-nowrap transition-colors">
+        Back to 3D Anatomy
+      </a>
+    </div>
+
     <!-- Upper Grid: 3D Liver Model + Biomarker Context -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       

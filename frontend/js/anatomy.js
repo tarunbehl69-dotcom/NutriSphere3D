@@ -77,181 +77,387 @@ class AnatomyExplorer {
         { name: 'RBC Count', val: 4.95, unit: 'M/uL', ref: '4.5 - 5.9', flag: 'normal', label: 'Normal', conf: 'Verified 98%', page: 'Page 1', note: 'Total erythrocyte mass ensuring adequate microvascular alveolar gas exchange.' }
       ],
       'Stomach': [
-        { name: 'Vitamin B12 (Cobalamin)', val: 340, unit: 'pg/mL', ref: '211 - 911', flag: 'normal', label: 'Normal', conf: 'Verified 96%', page: 'Page 3', note: 'Requires gastric parietal cell intrinsic factor for distal ileal absorption.' },
-        { name: 'Serum Gastrin', val: 48, unit: 'pg/mL', ref: '< 100', flag: 'normal', label: 'Normal', conf: 'Verified 94%', page: 'Page 3', note: 'G-cell peptide hormone regulating gastric hydrochloric acid secretion.' }
+        { name: 'Vitamin B12 (Cobalamin)', val: 340, unit: 'pg/mL', ref: '211 - 911', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 96%', page: 'Page 3', note: 'Requires gastric parietal cell intrinsic factor for distal ileal absorption.' },
+        { name: 'Serum Gastrin', val: 48, unit: 'pg/mL', ref: '< 100', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 94%', page: 'Page 3', note: 'G-cell peptide hormone regulating gastric hydrochloric acid secretion.' }
       ],
       'Intestines': [
-        { name: 'Serum Ferritin', val: 180, unit: 'ng/mL', ref: '30 - 400', flag: 'normal', label: 'Normal', conf: 'Verified 98%', page: 'Page 3', note: 'Intracellular iron storage protein reflecting systemic iron stores and reticuloendothelial reserve.' },
-        { name: 'Serum Iron', val: 95, unit: 'ug/dL', ref: '65 - 175', flag: 'normal', label: 'Normal', conf: 'Verified 97%', page: 'Page 3', note: 'Circulating transferrin-bound iron available for active erythropoiesis.' }
+        { name: 'Serum Ferritin', val: 180, unit: 'ng/mL', ref: '30 - 400', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 98%', page: 'Page 3', note: 'Intracellular iron storage protein reflecting systemic iron stores and reticuloendothelial reserve.' },
+        { name: 'Serum Iron', val: 95, unit: 'ug/dL', ref: '65 - 175', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 97%', page: 'Page 3', note: 'Circulating transferrin-bound iron available for active erythropoiesis.' }
+      ],
+      'small_intestine': [
+        { name: 'Serum Ferritin', val: 180, unit: 'ng/mL', ref: '30 - 400', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 98%', page: 'Page 3', note: 'Active iron transport through enterocyte ferroportin channels into portal blood.' },
+        { name: 'Serum Iron', val: 95, unit: 'ug/dL', ref: '65 - 175', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 97%', page: 'Page 3', note: 'Transferrin-bound iron absorbed across duodenum and proximal jejunum.' }
+      ],
+      'large_intestine': [
+        { name: 'C-Reactive Protein (CRP)', val: 1.2, unit: 'mg/L', ref: '< 3.0', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 99%', page: 'Page 3', note: 'Systemic baseline inflammatory marker confirming absence of mucosal inflammatory flares.' },
+        { name: 'Stool Occult Blood', val: 'Negative', unit: '', ref: 'Negative', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 99%', page: 'Page 3', note: 'Absence of lower gastrointestinal micro-bleeding.' }
+      ],
+      'spleen': [
+        { name: 'Platelet Count', val: 245, unit: 'x10^3/uL', ref: '150 - 450', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 99%', page: 'Page 1', note: 'Splenic red pulp dynamically pools roughly 30% of circulating platelets without sequestration.' },
+        { name: 'Total Leukocyte Count (WBC)', val: 6.8, unit: 'x10^3/uL', ref: '4.0 - 11.0', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 98%', page: 'Page 1', note: 'Splenic white pulp lymphoid follicles maintain active immune surveillance against pathogens.' }
+      ],
+      'urinary_bladder': [
+        { name: 'Urine Routine Protein', val: 'Nil', unit: '', ref: 'Nil', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 99%', page: 'Page 2', note: 'Absence of urinary protein confirms intact glomerular and urothelial barriers.' },
+        { name: 'Urine Specific Gravity', val: '1.018', unit: '', ref: '1.005 - 1.030', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 99%', page: 'Page 2', note: 'Normal renal urine concentrating ability and adequate patient hydration.' }
+      ],
+      'left_kidney': [
+        { name: 'Serum Creatinine', val: 1.05, unit: 'mg/dL', ref: '0.70 - 1.30', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 99%', page: 'Page 1', note: 'Filtered freely by glomerular capillaries; normal bilateral nephron clearance.' },
+        { name: 'eGFR (CKD-EPI)', val: 88, unit: 'mL/min/1.73m²', ref: '> 90', flag: 'high', label: 'Borderline Normal', conf: 'Verified 99%', page: 'Page 1', note: 'Estimated filtration rate sensitive to muscular mass, hydration, and acute perfusion.' }
+      ],
+      'right_kidney': [
+        { name: 'Serum Creatinine', val: 1.05, unit: 'mg/dL', ref: '0.70 - 1.30', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 99%', page: 'Page 1', note: 'Filtered freely by glomerular capillaries; normal bilateral nephron clearance.' },
+        { name: 'eGFR (CKD-EPI)', val: 88, unit: 'mL/min/1.73m²', ref: '> 90', flag: 'high', label: 'Borderline Normal', conf: 'Verified 99%', page: 'Page 1', note: 'Estimated filtration rate sensitive to muscular mass, hydration, and acute perfusion.' }
       ],
       'Spine': [
-        { name: 'Serum Calcium', val: 9.6, unit: 'mg/dL', ref: '8.5 - 10.2', flag: 'normal', label: 'Normal', conf: 'Verified 99%', page: 'Page 2', note: 'Ionized and protein-bound extracellular calcium regulating neuromuscular tone and bone mineralization.' },
-        { name: '25-OH Vitamin D Total', val: 22.4, unit: 'ng/mL', ref: '30.0 - 100.0', flag: 'urgent', label: 'Insufficiency', conf: 'Verified 98%', page: 'Page 2', note: 'Circulating pre-hormone; values below 30 ng/mL impair intestinal calcium transport and bone density.' },
-        { name: 'Alkaline Phosphatase (Bone)', val: 78, unit: 'U/L', ref: '44 - 147', flag: 'normal', label: 'Normal', conf: 'Verified 97%', page: 'Page 2', note: 'Osteoblast-derived isoenzyme indicating physiological bone remodeling turnover.' }
+        { name: 'Serum Calcium', val: 9.6, unit: 'mg/dL', ref: '8.5 - 10.2', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 99%', page: 'Page 2', note: 'Ionized and protein-bound extracellular calcium regulating neuromuscular tone and bone mineralization.' },
+        { name: '25-OH Vitamin D Total', val: 22.4, unit: 'ng/mL', ref: '30.0 - 100.0', flag: 'urgent', label: 'Needs Attention (Low)', conf: 'Verified 98%', page: 'Page 2', note: 'Circulating pre-hormone; values below 30 ng/mL indicate sub-optimal bone mineral support.' },
+        { name: 'Alkaline Phosphatase (Bone)', val: 78, unit: 'U/L', ref: '44 - 147', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 97%', page: 'Page 2', note: 'Osteoblast-derived isoenzyme indicating physiological bone remodeling turnover.' }
       ],
       'Thyroid': [
-        { name: 'TSH (Thyrotropin)', val: 2.35, unit: 'uIU/mL', ref: '0.40 - 4.50', flag: 'normal', label: 'Normal', conf: 'Verified 99%', page: 'Page 2', note: 'Pituitary feedback hormone governing thyroid follicle T4 and T3 hormone synthesis.' },
-        { name: 'Free T4 (Thyroxine)', val: 1.25, unit: 'ng/dL', ref: '0.82 - 1.77', flag: 'normal', label: 'Normal', conf: 'Verified 98%', page: 'Page 2', note: 'Unbound circulating thyroxine regulating peripheral cellular basal metabolic rate.' }
+        { name: 'TSH (Thyrotropin)', val: 2.35, unit: 'uIU/mL', ref: '0.40 - 4.50', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 99%', page: 'Page 2', note: 'Pituitary feedback hormone governing thyroid follicle T4 and T3 hormone synthesis.' },
+        { name: 'Free T4 (Thyroxine)', val: 1.25, unit: 'ng/dL', ref: '0.82 - 1.77', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 98%', page: 'Page 2', note: 'Unbound circulating thyroxine regulating peripheral cellular basal metabolic rate.' }
       ],
       'Brain': [
-        { name: 'Serum Folate', val: 12.8, unit: 'ng/mL', ref: '> 4.0', flag: 'normal', label: 'Normal', conf: 'Verified 97%', page: 'Page 3', note: 'Essential methyl-donor cofactor for neuronal DNA synthesis and myelin sheath maintenance.' },
-        { name: 'Homocysteine', val: 9.8, unit: 'umol/L', ref: '< 15.0', flag: 'normal', label: 'Normal', conf: 'Verified 95%', page: 'Page 3', note: 'Sulfur-containing amino acid intermediary; normal level indicates intact transsulfuration pathway.' }
+        { name: 'Serum Folate', val: 12.8, unit: 'ng/mL', ref: '> 4.0', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 97%', page: 'Page 3', note: 'Essential methyl-donor cofactor for neuronal DNA synthesis and myelin sheath maintenance.' },
+        { name: 'Homocysteine', val: 9.8, unit: 'umol/L', ref: '< 15.0', flag: 'normal', label: 'Within Typical Range', conf: 'Verified 95%', page: 'Page 3', note: 'Sulfur-containing amino acid intermediary; normal level indicates intact transsulfuration pathway.' }
       ]
     };
 
-    // Standard clinical camera focus targets & easy plain-English medical metadata
+    // Mirror lowercase and title-case aliases for verified biomarkers
+    ['Liver', 'Heart', 'Kidneys', 'Lungs', 'Stomach', 'Pancreas', 'Spine', 'Thyroid', 'Brain'].forEach(k => {
+      const low = k.toLowerCase();
+      if (this.verifiedBiomarkers[k]) {
+        this.verifiedBiomarkers[low] = this.verifiedBiomarkers[k];
+      }
+    });
+    this.verifiedBiomarkers['Spleen'] = this.verifiedBiomarkers['spleen'];
+    this.verifiedBiomarkers['Small Intestine'] = this.verifiedBiomarkers['small_intestine'];
+    this.verifiedBiomarkers['Large Intestine'] = this.verifiedBiomarkers['large_intestine'];
+    this.verifiedBiomarkers['Urinary Bladder'] = this.verifiedBiomarkers['urinary_bladder'];
+    this.verifiedBiomarkers['Left Kidney'] = this.verifiedBiomarkers['left_kidney'];
+    this.verifiedBiomarkers['Right Kidney'] = this.verifiedBiomarkers['right_kidney'];
+    this.verifiedBiomarkers['spine'] = this.verifiedBiomarkers['Spine'];
+
+    // Standard clinical camera focus targets & verified two-level medical metadata
+    const registry = (typeof window !== 'undefined' && window.NUTRISPHERE_ORGAN_REGISTRY) ? window.NUTRISPHERE_ORGAN_REGISTRY : {};
+
     this.organCatalog = {
-      'Liver': {
+      'liver': {
+        organ_id: 'liver',
         name: 'Liver',
+        display_name: 'Liver',
         easyRole: "Your Body's Master Filter & Energy Center",
-        latin: 'Hepar',
-        system: 'digestive',
+        latin: 'Hepar • TA2 A05.8.01.001',
+        system: 'Digestive system',
         cameraPos: [-0.05, 0.38, 0.55],
         cameraTarget: [-0.03, 0.35, 0.04],
         anchorWorld: [-0.03, 0.35, 0.04],
-        color: 0xf97316, // Vivid Hepatic Terracotta / Amber
+        color: 0xf97316,
+        emissive: 0xc2410c,
         tests: ['ALT', 'AST', 'ALP', 'GGT', 'Bilirubin Total', 'Albumin', 'Total Protein'],
-        role: 'Cleans toxins and chemicals from your blood, turns food into usable energy, produces bile to digest fats, and stores glycogen.',
-        clinicalNote: 'Elevated liver enzymes (ALT 58 U/L, AST 46 U/L) mean liver cells are working under extra stress. This is often temporary and can be improved with nutritious foods, lower alcohol, and rest.',
-        alcoholImpact: 'Over 90% of alcohol is processed here. Drinking too much overworks liver cells, leading to temporary cell stress and fat buildup.',
-        nutritionAdvice: 'Eat antioxidant-rich Indian foods: amla (Indian gooseberry), turmeric, cruciferous vegetables, garlic, and lentils (dal).'
+        role: "Cleans toxins and chemicals from your blood, turns food into usable energy, produces bile to digest fats, and stores glycogen.",
+        level1_role: "Your Body's Master Filter & Energy Center: Cleans your blood, breaks down nutrients from food, stores energy, and helps digest fats.",
+        level2_medical: "The liver is the principal metabolic factory of the human body. Hepatocytes synthesize albumin, blood coagulation factors, and bile acids. It processes metabolic byproducts, detoxifies medications and xenobiotics, and balances gluconeogenesis with glycogen storage.",
+        clinicalNote: "Elevated liver enzymes (ALT 58 U/L, AST 46 U/L) mean liver cells are working under extra stress. This is often temporary and can be improved with nutritious foods, lower alcohol, and rest.",
+        alcoholImpact: "Over 90% of ingested alcohol is metabolized by hepatic alcohol dehydrogenase. Limiting intake prevents steatotic lipid accumulation and gives hepatocytes rest.",
+        nutritionAdvice: "Eat antioxidant-rich Indian foods: amla (Indian gooseberry), turmeric, cruciferous vegetables, garlic, and lentils (dal)."
       },
-      'Heart': {
+      'heart': {
+        organ_id: 'heart',
         name: 'Heart',
+        display_name: 'Heart',
         easyRole: "Your Body's Life Pump",
-        latin: 'Cor',
-        system: 'cardiovascular',
+        latin: 'Cor • TA2 A12.1.00.001',
+        system: 'Cardiovascular system',
         cameraPos: [0.05, 0.45, 0.50],
         cameraTarget: [0.04, 0.43, 0.03],
         anchorWorld: [0.04, 0.43, 0.03],
-        color: 0xef4444, // Bright Arterial Crimson
+        color: 0xef4444,
+        emissive: 0xdc2626,
         tests: ['Total Cholesterol', 'LDL Cholesterol', 'HDL Cholesterol', 'Triglycerides', 'ApoB', 'Troponin I', 'hs-CRP'],
-        role: 'Beats about 100,000 times a day to pump fresh oxygen and nutrients through your blood vessels to every part of your body.',
-        clinicalNote: 'LDL ("bad") cholesterol at 142 mg/dL and ApoB at 104 mg/dL mean there are more circulating cholesterol particles than ideal. Eating more soluble fiber and heart-healthy fats helps lower them.',
-        alcoholImpact: 'Heavy drinking raises blood pressure and can cause irregular heartbeats. Cutting back helps blood vessels relax.',
-        nutritionAdvice: 'Choose heart-healthy foods: oats (rich in beta-glucan fiber), walnuts, chia seeds, flaxseeds, and low-sodium home-cooked meals.'
+        role: "Beats about 100,000 times a day to pump fresh oxygen and nutrients through your blood vessels to every part of your body.",
+        level1_role: "Your Body's Life Pump: Beats about 100,000 times a day to pump fresh oxygen and nutrients through blood vessels to every organ.",
+        level2_medical: "Four-chambered muscular organ comprising the left and right atria and ventricles, synchronized by the sinoatrial and atrioventricular conduction systems. Coronary arteries supply the contracting myocardium.",
+        clinicalNote: "LDL ('bad') cholesterol at 142 mg/dL and ApoB at 104 mg/dL mean there are more circulating cholesterol particles than ideal. Eating more soluble fiber and heart-healthy fats helps lower them.",
+        alcoholImpact: "Excess alcohol intake raises blood pressure and sympathetic tone. Moderating intake helps peripheral blood vessels relax and maintains healthy arterial elasticity.",
+        nutritionAdvice: "Choose heart-healthy foods: oats (rich in beta-glucan fiber), walnuts, chia seeds, flaxseeds, and low-sodium home-cooked meals."
       },
-      'Kidneys': {
-        name: 'Kidneys',
+      'left_kidney': {
+        organ_id: 'left_kidney',
+        name: 'Left Kidney',
+        display_name: 'Left Kidney',
+        easyRole: 'Left Water & Salt Filter',
+        latin: 'Ren Sinister • TA2 A08.1.01.001',
+        system: 'Renal & Urinary system',
+        cameraPos: [0.08, 0.32, -0.45],
+        cameraTarget: [0.05, 0.30, -0.01],
+        anchorWorld: [0.05, 0.30, -0.01],
+        color: 0xe11d48,
+        emissive: 0xbe123c,
+        tests: ['Serum Creatinine', 'eGFR', 'BUN', 'Uric Acid', 'Electrolytes'],
+        role: "Filters blood continuously to remove metabolic waste and balance water and essential salts.",
+        level1_role: "Left Water & Salt Filter: Filters blood continuously, removes waste through urine, and balances body hydration.",
+        level2_medical: "Retroperitoneal organ situated between T12 and L3. Composed of approximately 1 million nephrons that perform glomerular filtration, tubular reabsorption, and acid-base maintenance while secreting erythropoietin.",
+        clinicalNote: "Stable bilateral filtration rate (eGFR 88 mL/min). Staying well-hydrated helps your kidneys work effortlessly.",
+        alcoholImpact: "Alcohol acts as a diuretic, making your body lose fluids and leading to dehydration and temporary electrolyte shifts.",
+        nutritionAdvice: "Drink plenty of water, avoid excess salt in snacks and processed food, and enjoy fresh fruits like apples, berries, and watermelon."
+      },
+      'right_kidney': {
+        organ_id: 'right_kidney',
+        name: 'Right Kidney',
+        display_name: 'Right Kidney',
+        easyRole: 'Right Water & Salt Filter',
+        latin: 'Ren Dexter • TA2 A08.1.01.001',
+        system: 'Renal & Urinary system',
+        cameraPos: [-0.08, 0.30, -0.45],
+        cameraTarget: [-0.05, 0.28, -0.01],
+        anchorWorld: [-0.05, 0.28, -0.01],
+        color: 0xe11d48,
+        emissive: 0xbe123c,
+        tests: ['Serum Creatinine', 'eGFR', 'BUN', 'Uric Acid'],
+        role: "Located just below the liver, working alongside the left kidney to purify blood.",
+        level1_role: "Right Water & Salt Filter: Located just beneath the liver, working alongside the left kidney to purify blood.",
+        level2_medical: "Situated slightly lower than the left kidney to accommodate the right hepatic lobe. Shares identical nephron filtration architecture and endocrine roles.",
+        clinicalNote: "Serum creatinine (1.05 mg/dL) confirms healthy bilateral filtration.",
+        alcoholImpact: "Avoid binge alcohol episodes that cause acute dehydration and temporary renal perfusion drops.",
+        nutritionAdvice: "Maintain consistent daily fluid intake and minimize unnecessary painkiller use without doctor guidance."
+      },
+      'kidneys': {
+        organ_id: 'kidneys',
+        name: 'Kidneys (Both)',
+        display_name: 'Kidneys (Both)',
         easyRole: 'Your Natural Water & Salt Filters',
-        latin: 'Renes',
-        system: 'renal',
-        cameraPos: [0.00, 0.28, -0.55], // Posterior retroperitoneal view
+        latin: 'Renes • TA2 A08.1.01.001',
+        system: 'Renal & Urinary system',
+        cameraPos: [0.00, 0.28, -0.55],
         cameraTarget: [0.00, 0.26, -0.01],
         anchorWorld: [0.00, 0.26, -0.01],
-        color: 0xe11d48, // Vivid Renal Ruby
+        color: 0xe11d48,
+        emissive: 0xbe123c,
         tests: ['Serum Creatinine', 'eGFR', 'Blood Urea Nitrogen (BUN)', 'Uric Acid', 'Urine Microalbumin', 'Electrolytes (Na, K)'],
-        role: 'Filter about 200 quarts of fluid daily, balancing water and essential salts while removing waste through urine.',
-        clinicalNote: 'Your filtration rate (eGFR 88 mL/min) and creatinine (1.05 mg/dL) show good, stable kidney filtration. Staying well-hydrated helps your kidneys work effortlessly.',
-        alcoholImpact: 'Alcohol acts as a diuretic, making your body lose fluids and leading to dehydration and temporary electrolyte shifts.',
-        nutritionAdvice: 'Drink plenty of water, avoid excess salt in snacks and processed food, and enjoy fresh fruits like apples, berries, and watermelon.'
+        role: "Filter about 200 quarts of fluid daily, balancing water and essential salts while removing waste through urine.",
+        level1_role: "Your Natural Water & Salt Filters: Paired organs filtering around 200 quarts of fluid daily to balance water and electrolytes.",
+        level2_medical: "Bilateral renal system maintaining fluid balance, acid-base homeostasis, systemic arterial pressure (renin-angiotensin-aldosterone axis), and bone mineral regulation via calcitriol synthesis.",
+        clinicalNote: "Your filtration rate (eGFR 88 mL/min) and creatinine (1.05 mg/dL) show good, stable kidney filtration. Staying well-hydrated helps your kidneys work effortlessly.",
+        alcoholImpact: "Alcohol acts as a diuretic, making your body lose fluids and leading to dehydration and temporary electrolyte shifts.",
+        nutritionAdvice: "Drink plenty of water, avoid excess salt in snacks and processed food, and enjoy fresh fruits like apples, berries, and watermelon."
       },
-      'Lungs': {
+      'lungs': {
+        organ_id: 'lungs',
         name: 'Lungs',
+        display_name: 'Lungs',
         easyRole: 'Your Oxygen Exchange Center',
-        latin: 'Pulmones',
-        system: 'respiratory',
+        latin: 'Pulmones • TA2 A06.5.01.001',
+        system: 'Respiratory system',
         cameraPos: [0.00, 0.48, 0.65],
         cameraTarget: [0.01, 0.46, -0.01],
         anchorWorld: [0.01, 0.46, -0.01],
-        color: 0x0ea5e9, // Vivid Pulmonary Azure
+        color: 0x0ea5e9,
+        emissive: 0x0284c7,
         tests: ['Hemoglobin', 'Hematocrit', 'RBC Count', 'Arterial Blood Gas', 'Oxygen Saturation'],
-        role: 'Take in fresh oxygen when you breathe in and release carbon dioxide when you breathe out, keeping your blood oxygenated.',
-        clinicalNote: 'Hemoglobin at 14.8 g/dL and red blood cells are at healthy levels, confirming that your blood carries oxygen efficiently to all organs.',
-        alcoholImpact: 'Excess alcohol can weaken the lungs\' natural defense against respiratory bugs and irritation.',
-        nutritionAdvice: 'Support lung tissue with vitamin C-rich foods: citrus fruits, amla, bell peppers, tomatoes, and plenty of water.'
+        role: "Take in fresh oxygen when you breathe in and release carbon dioxide when you breathe out, keeping your blood oxygenated.",
+        level1_role: "Your Oxygen Exchange Center: Takes in fresh oxygen when you breathe in and releases carbon dioxide waste when you breathe out.",
+        level2_medical: "Bilateral pulmonary organs featuring 5 lobes (3 right, 2 left) containing branching bronchial trees terminating in roughly 300 million alveoli, where alveolar-capillary gas diffusion occurs.",
+        clinicalNote: "Hemoglobin at 14.8 g/dL and red blood cells are at healthy levels, confirming that your blood carries oxygen efficiently to all organs.",
+        alcoholImpact: "Excess alcohol can weaken the lungs' natural defense against respiratory bugs and irritation.",
+        nutritionAdvice: "Support lung tissue with vitamin C-rich foods: citrus fruits, amla, bell peppers, tomatoes, and plenty of water."
       },
-      'Pancreas': {
-        name: 'Pancreas',
-        easyRole: 'Your Blood Sugar & Enzyme Factory',
-        latin: 'Pancreas',
-        system: 'digestive',
-        cameraPos: [0.01, 0.30, 0.45],
-        cameraTarget: [0.01, 0.28, 0.02],
-        anchorWorld: [0.01, 0.28, 0.02],
-        color: 0xf59e0b, // Luminous Endocrine Amber
-        tests: ['Fasting Blood Glucose', 'HbA1c', 'Serum Insulin', 'C-Peptide', 'Amylase', 'Lipase'],
-        role: 'Produces insulin to keep blood sugar balanced, along with digestive juices that break down fats, proteins, and carbohydrates in food.',
-        clinicalNote: 'Fasting glucose at 104 mg/dL and HbA1c at 5.8% indicate mild pre-diabetes. Simple lifestyle habits like brisk walks after meals and eating high-fiber whole grains can bring them back to normal.',
-        alcoholImpact: 'Heavy alcohol can irritate pancreatic ducts and trigger inflammation. Moderation is key for pancreatic health.',
-        nutritionAdvice: 'Emphasize high-fiber foods: whole wheat roti, oats, fenugreek (methi) seeds, chickpeas, and green leafy vegetables.'
-      },
-      'Stomach': {
+      'stomach': {
+        organ_id: 'stomach',
         name: 'Stomach',
+        display_name: 'Stomach',
         easyRole: 'Your Main Food Breakdown Chamber',
-        latin: 'Gaster',
-        system: 'digestive',
+        latin: 'Gaster • TA2 A05.5.01.001',
+        system: 'Digestive system',
         cameraPos: [0.06, 0.35, 0.50],
         cameraTarget: [0.04, 0.33, 0.04],
         anchorWorld: [0.04, 0.33, 0.04],
-        color: 0xfb923c, // Warm Gastric Coral
+        color: 0xfb923c,
+        emissive: 0xc2410c,
         tests: ['Vitamin B12', 'Serum Gastrin', 'Pepsinogen I/II', 'Helicobacter pylori Serology'],
-        role: 'Uses natural stomach acids and enzymes to churn food, break down protein, and make Vitamin B12 absorbable.',
-        clinicalNote: 'Vitamin B12 at 340 pg/mL is normal, ensuring healthy red blood cells and nerve signaling.',
-        alcoholImpact: 'Alcohol irritates the stomach lining and increases stomach acid, which can cause heartburn or gastritis if taken on an empty stomach.',
-        nutritionAdvice: 'Include fermented curd/yogurt, lentils, fortified foods, and avoid overly greasy late-night meals.'
+        role: "Uses natural stomach acids and enzymes to churn food, break down protein, and make Vitamin B12 absorbable.",
+        level1_role: "Your Main Food Breakdown Chamber: Churns meals with digestive acid and prepares nutrients for absorption.",
+        level2_medical: "Muscular reservoir between the esophagus and duodenum. Gastric parietal cells secrete hydrochloric acid (HCl) and intrinsic factor, which is required for Vitamin B12 absorption in the ileum.",
+        clinicalNote: "Vitamin B12 at 340 pg/mL is normal, ensuring healthy red blood cells and nerve signaling.",
+        alcoholImpact: "Alcohol irritates the stomach lining and increases stomach acid, which can cause heartburn or gastritis if taken on an empty stomach.",
+        nutritionAdvice: "Include fermented curd/yogurt, lentils, fortified foods, and avoid overly greasy late-night meals."
       },
-      'Intestines': {
-        name: 'Intestines',
+      'pancreas': {
+        organ_id: 'pancreas',
+        name: 'Pancreas',
+        display_name: 'Pancreas',
+        easyRole: 'Your Blood Sugar & Enzyme Factory',
+        latin: 'Pancreas • TA2 A05.9.01.001',
+        system: 'Digestive & Endocrine system',
+        cameraPos: [0.01, 0.30, 0.45],
+        cameraTarget: [0.01, 0.28, 0.02],
+        anchorWorld: [0.01, 0.28, 0.02],
+        color: 0xf59e0b,
+        emissive: 0xb45309,
+        tests: ['Fasting Blood Glucose', 'HbA1c', 'Serum Insulin', 'C-Peptide', 'Amylase', 'Lipase'],
+        role: "Produces insulin to keep blood sugar balanced, along with digestive juices that break down fats, proteins, and carbohydrates in food.",
+        level1_role: "Your Blood Sugar & Enzyme Factory: Produces insulin to balance blood glucose, plus enzymes to digest food.",
+        level2_medical: "Dual endocrine and exocrine organ. Acinar cells produce digestive enzymes delivered into the duodenum; Islets of Langerhans beta cells secrete insulin to regulate systemic glucose uptake.",
+        clinicalNote: "Fasting glucose at 104 mg/dL and HbA1c at 5.8% indicate mild pre-diabetes. Simple lifestyle habits like brisk walks after meals and eating high-fiber whole grains can bring them back to normal.",
+        alcoholImpact: "Heavy alcohol can irritate pancreatic ducts and trigger inflammation. Moderation is key for pancreatic health.",
+        nutritionAdvice: "Emphasize high-fiber foods: whole wheat roti, oats, fenugreek (methi) seeds, chickpeas, and green leafy vegetables."
+      },
+      'spleen': {
+        organ_id: 'spleen',
+        name: 'Spleen',
+        display_name: 'Spleen',
+        easyRole: 'Your Blood Filter & Immune Watchtower',
+        latin: 'Splen / Lien • TA2 A13.2.01.001',
+        system: 'Immune & Lymphatic system',
+        cameraPos: [0.12, 0.35, -0.38],
+        cameraTarget: [0.08, 0.33, -0.11],
+        anchorWorld: [0.08, 0.33, -0.11],
+        color: 0xa855f7,
+        emissive: 0x7e22ce,
+        tests: ['Platelet Count', 'White Blood Cell Count', 'Reticulocyte Count'],
+        role: "Recycles old red blood cells, stores protective platelets, and defends against blood-borne bacteria.",
+        level1_role: "Your Blood Filter & Immune Watchtower: Recycles old red blood cells, stores platelets, and helps fight blood-borne infections.",
+        level2_medical: "Largest secondary lymphoid organ in the human body, situated in the left hypochondrium. Red pulp sinusoids filter senescent erythrocytes and pool platelets; white pulp lymphoid follicles coordinate B-cell antibody responses against encapsulated pathogens.",
+        clinicalNote: "Platelet count (245 x 10^3/uL) is within the optimal range, confirming stable splenic blood pooling and bone marrow production.",
+        alcoholImpact: "Chronic high alcohol exposure can increase portal venous pressure, affecting splenic vascular dynamics.",
+        nutritionAdvice: "Support immune tissue with zinc and antioxidant-rich foods: pumpkin seeds, sesame seeds, spinach, and whole legumes."
+      },
+      'small_intestine': {
+        organ_id: 'small_intestine',
+        name: 'Small Intestine',
+        display_name: 'Small Intestine',
         easyRole: 'Your Nutrient Absorption Highway',
-        latin: 'Intestinum',
-        system: 'digestive',
+        latin: 'Intestinum Tenue • TA2 A05.6.01.001',
+        system: 'Digestive system',
+        cameraPos: [0.00, 0.22, 0.50],
+        cameraTarget: [0.00, 0.20, 0.02],
+        anchorWorld: [0.00, 0.20, 0.02],
+        color: 0xf43f5e,
+        emissive: 0xbe123c,
+        tests: ['Serum Iron', 'Ferritin', 'Celiac Serology (tTG-IgA)', 'Electrolytes'],
+        role: "Absorbs vitamins, minerals, iron, glucose, and amino acids from digested food into your bloodstream.",
+        level1_role: "Your Nutrient Absorption Highway: Absorbs vitamins, minerals, amino acids, and healthy fats from food into your bloodstream.",
+        level2_medical: "Long tubular segment comprising duodenum, jejunum, and ileum. Microvilli on mucosal enterocytes expand surface area to ~30 square meters, facilitating active enzymatic hydrolysis and carrier-mediated nutrient transport into the portal vein.",
+        clinicalNote: "Iron and ferritin stores are well within normal ranges, indicating good nutrient absorption from your diet.",
+        alcoholImpact: "Excess alcohol can temporarily loosen tight junction proteins between intestinal enterocytes, increasing gut permeability.",
+        nutritionAdvice: "Pair plant-based iron sources (spinach, lentils) with Vitamin C (lemon juice, amla) to enhance intestinal iron absorption."
+      },
+      'large_intestine': {
+        organ_id: 'large_intestine',
+        name: 'Large Intestine',
+        display_name: 'Large Intestine',
+        easyRole: 'Your Water Recycling & Gut Microbiome Center',
+        latin: 'Intestinum Crassum • TA2 A05.7.01.001',
+        system: 'Digestive system',
         cameraPos: [-0.05, 0.15, 0.58],
-        cameraTarget: [-0.06, 0.13, 0.00],
-        anchorWorld: [-0.06, 0.13, 0.00],
-        color: 0xec4899, // Enteric Rose
-        tests: ['Fecal Calprotectin', 'Serum Iron', 'Ferritin', 'Celiac Serology (tTG-IgA)', 'Stool Occult Blood'],
-        role: 'Absorbs water, vitamins, minerals, iron, and glucose into the blood while housing trillions of beneficial gut bacteria.',
-        clinicalNote: 'Iron and ferritin stores are well within normal ranges, indicating good nutrient absorption from your diet.',
-        alcoholImpact: 'Frequent alcohol can loosen gut barriers and cause temporary bloating or digestive discomfort.',
-        nutritionAdvice: 'Feed beneficial gut flora with prebiotics and fiber: oats, bananas, garlic, onions, buttermilk, and dal.'
+        cameraTarget: [-0.04, 0.13, 0.00],
+        anchorWorld: [-0.04, 0.13, 0.00],
+        color: 0xec4899,
+        emissive: 0xbe185d,
+        tests: ['Fecal Calprotectin', 'Stool Occult Blood', 'C-Reactive Protein'],
+        role: "Reabsorbs water and minerals, houses trillions of friendly gut bacteria, and forms stool.",
+        level1_role: "Your Water Recycling & Gut Microbiome Center: Reabsorbs water and minerals, houses friendly gut bacteria, and forms waste.",
+        level2_medical: "The colon (cecum, ascending, transverse, descending, and sigmoid colon) reabsorbs water and electrolytes (Na, Cl) while trillions of anaerobic commensal bacteria ferment non-digestible fiber into beneficial short-chain fatty acids (acetate, propionate, butyrate).",
+        clinicalNote: "Inflammatory markers are calm and baseline digestion is functioning smoothly.",
+        alcoholImpact: "Frequent alcohol consumption can alter gut microbiome diversity and cause transient digestive bloating.",
+        nutritionAdvice: "Feed beneficial gut flora with diverse dietary fiber: whole grains, oats, bananas, onions, garlic, and fermented curd (dahi)."
       },
-      'Brain': {
-        name: 'Brain',
-        easyRole: 'Your Master Control Center',
-        latin: 'Encephalon',
-        system: 'nervous',
-        cameraPos: [0.00, 0.80, 0.40],
-        cameraTarget: [0.00, 0.77, -0.01],
-        anchorWorld: [0.00, 0.77, -0.01],
-        color: 0x8b5cf6, // Electric Neuro Violet
-        tests: ['Vitamin B12', 'Serum Folate', 'Homocysteine', 'TSH', 'Electrolytes'],
-        role: 'Controls thinking, memories, emotions, movements, balance, and automatic bodily functions like breathing.',
-        clinicalNote: 'Folate (12.8 ng/mL) and homocysteine (9.8 umol/L) are normal, showing healthy nerve protection and cellular repair.',
-        alcoholImpact: 'Alcohol slows brain signaling, blunting reflexes and impairing memory formation and restful sleep.',
-        nutritionAdvice: 'Nourish brain cells with walnuts, spinach, seeds, whole grains, and omega-3 rich foods.'
-      },
-      'Spine': {
-        name: 'Spine & Bones',
-        easyRole: "Your Body's Strong Bone Framework",
-        latin: 'Columna Vertebralis',
-        system: 'skeletal',
-        cameraPos: [0.00, 0.45, -0.65],
-        cameraTarget: [0.00, 0.44, -0.04],
-        anchorWorld: [0.00, 0.44, -0.04],
-        color: 0xf8fafc, // Bright Bone White
-        tests: ['Serum Calcium', '25-OH Vitamin D', 'Alkaline Phosphatase (Bone)', 'Phosphorus', 'Parathyroid Hormone (PTH)'],
-        role: 'Provides structural support, protects your spinal cord, allows movement, and stores calcium and minerals.',
-        clinicalNote: 'Vitamin D is at 22.4 ng/mL (needs attention; healthy target is 30+ ng/mL). Vitamin D helps your bones absorb calcium. Consider safe sun exposure and speaking to your doctor about a D3 supplement.',
-        alcoholImpact: 'Chronic alcohol reduces bone-building cell activity and interferes with vitamin D activation.',
-        nutritionAdvice: 'Boost bone strength with sesame seeds (til), ragi (finger millet), curd/milk, and vitamin D3 with K2.'
-      },
-      'Thyroid': {
+      'thyroid': {
+        organ_id: 'thyroid',
         name: 'Thyroid',
+        display_name: 'Thyroid',
         easyRole: 'Your Metabolism Thermostat',
-        latin: 'Glandula Thyroidea',
-        system: 'endocrine',
+        latin: 'Glandula Thyroidea • TA2 A11.3.00.001',
+        system: 'Endocrine system',
         cameraPos: [0.00, 0.62, 0.35],
         cameraTarget: [0.00, 0.60, 0.03],
         anchorWorld: [0.00, 0.60, 0.03],
-        color: 0xeab308, // Glowing Endocrine Gold
+        color: 0xeab308,
+        emissive: 0xa16207,
         tests: ['TSH', 'Free T3', 'Free T4', 'Anti-TPO Antibodies', 'Thyroglobulin'],
-        role: 'Releases thyroid hormones that control your body\'s energy levels, calorie burning, and body temperature.',
-        clinicalNote: 'TSH at 2.35 uIU/mL is completely normal, showing healthy thyroid function and stable metabolism.',
-        alcoholImpact: 'Excess alcohol can temporarily disrupt hormone balance, leading to sluggishness.',
-        nutritionAdvice: 'Include trace minerals from iodized salt, pumpkin seeds, sunflower seeds, and whole grains.'
+        role: "Releases thyroid hormones that control your body's energy levels, calorie burning, and body temperature.",
+        level1_role: "Your Metabolism Thermostat: Butterfly-shaped gland in your neck controlling your body's energy use, heart rate, and temperature.",
+        level2_medical: "Endocrine gland positioned anterior to the trachea beneath the cricoid cartilage. Follicular cells produce thyroxine (T4) and triiodothyronine (T3) regulated by pituitary thyroid-stimulating hormone (TSH) in a negative feedback loop.",
+        clinicalNote: "TSH at 2.35 uIU/mL is completely normal, showing healthy thyroid function and stable metabolism.",
+        alcoholImpact: "Excess alcohol can temporarily disrupt hormone balance, leading to sluggishness.",
+        nutritionAdvice: "Include trace minerals from iodized salt, pumpkin seeds, sunflower seeds, and whole grains."
+      },
+      'urinary_bladder': {
+        organ_id: 'urinary_bladder',
+        name: 'Urinary Bladder',
+        display_name: 'Urinary Bladder',
+        easyRole: 'Your Urine Storage Reservoir',
+        latin: 'Vesica Urinaria • TA2 A08.3.01.001',
+        system: 'Renal & Urinary system',
+        cameraPos: [0.00, 0.05, 0.45],
+        cameraTarget: [0.00, 0.02, 0.02],
+        anchorWorld: [0.00, 0.02, 0.02],
+        color: 0xec4899,
+        emissive: 0xbe185d,
+        tests: ['Urinalysis / Urine Routine', 'Urine Microalbumin', 'Urine Culture'],
+        role: "Flexible muscular balloon in the pelvis holding urine until release.",
+        level1_role: "Your Urine Storage Reservoir: Flexible muscular balloon in the pelvis holding urine until you are ready to release it.",
+        level2_medical: "Pelvic reservoir lined with distensible transitional urothelium. Smooth detrusor muscle walls contract synchronously under parasympathetic control during micturition while ureteral orifices prevent vesicoureteral reflux.",
+        clinicalNote: "Normal urinary biomarkers with no protein leakage or microbial sediment.",
+        alcoholImpact: "Alcohol is a bladder irritant and diuretic that accelerates bladder filling while causing systemic dehydration.",
+        nutritionAdvice: "Drink ample water throughout the day to keep urine clear or pale straw-colored, flushing urinary pathways naturally."
+      },
+      'brain': {
+        organ_id: 'brain',
+        name: 'Brain',
+        display_name: 'Brain',
+        easyRole: 'Your Master Control Center',
+        latin: 'Encephalon • TA2 A14.1.00.001',
+        system: 'Nervous system',
+        cameraPos: [0.00, 0.80, 0.40],
+        cameraTarget: [0.00, 0.77, -0.01],
+        anchorWorld: [0.00, 0.77, -0.01],
+        color: 0x8b5cf6,
+        emissive: 0x7e22ce,
+        tests: ['Vitamin B12', 'Serum Folate', 'Homocysteine', 'TSH', 'Electrolytes'],
+        role: "Controls thinking, memories, emotions, movements, balance, and automatic bodily functions like breathing.",
+        level1_role: "Your Master Control Center: Coordinates thinking, memory, emotion, movement, balance, and automatic bodily rhythms.",
+        level2_medical: "Central nervous organ consisting of cerebral hemispheres, basal ganglia, brainstem, and cerebellum. Glial networks, neurotransmitters, and complex neural circuits regulate motor coordination, cognitive processing, and neuroendocrine homeostasis.",
+        clinicalNote: "Folate (12.8 ng/mL) and homocysteine (9.8 umol/L) are normal, showing healthy nerve protection and cellular repair.",
+        alcoholImpact: "Alcohol slows brain signaling, blunting reflexes and impairing memory formation and restful sleep.",
+        nutritionAdvice: "Nourish brain cells with walnuts, spinach, seeds, whole grains, and omega-3 rich foods."
+      },
+      'spine': {
+        organ_id: 'spine',
+        name: 'Spine & Bones',
+        display_name: 'Spine & Bones',
+        easyRole: "Your Body's Strong Bone Framework",
+        latin: 'Columna Vertebralis • TA2 A02.2.00.001',
+        system: 'Skeletal system',
+        cameraPos: [0.00, 0.45, -0.65],
+        cameraTarget: [0.00, 0.44, -0.04],
+        anchorWorld: [0.00, 0.44, -0.04],
+        color: 0xf8fafc,
+        emissive: 0x000000,
+        tests: ['Serum Calcium', '25-OH Vitamin D', 'Alkaline Phosphatase (Bone)', 'Phosphorus', 'Parathyroid Hormone (PTH)'],
+        role: "Provides structural support, protects your spinal cord, allows movement, and stores calcium and minerals.",
+        level1_role: "Your Body's Strong Framework: Protects your spinal cord, supports posture, and stores vital calcium minerals.",
+        level2_medical: "Articulated column consisting of 33 vertebrae (cervical, thoracic, lumbar, sacral, coccygeal) separated by fibrocartilaginous intervertebral discs, providing axial support and protecting the central spinal cord.",
+        clinicalNote: "Vitamin D is at 22.4 ng/mL (needs attention; healthy target is 30+ ng/mL). Vitamin D helps your bones absorb calcium. Consider safe sun exposure and speaking to your doctor about a D3 supplement.",
+        alcoholImpact: "Chronic alcohol reduces bone-building cell activity and interferes with vitamin D activation.",
+        nutritionAdvice: "Boost bone strength with sesame seeds (til), ragi (finger millet), curd/milk, and vitamin D3 with K2."
       }
     };
+
+    // Populate title-case and alias mirrors for seamless backward compatibility
+    ['Liver', 'Heart', 'Kidneys', 'Lungs', 'Stomach', 'Pancreas', 'Spleen', 'Brain', 'Thyroid', 'Spine'].forEach(k => {
+      const low = k.toLowerCase();
+      if (this.organCatalog[low]) {
+        this.organCatalog[k] = this.organCatalog[low];
+      }
+    });
+    this.organCatalog['Left Kidney'] = this.organCatalog['left_kidney'];
+    this.organCatalog['Right Kidney'] = this.organCatalog['right_kidney'];
+    this.organCatalog['Small Intestine'] = this.organCatalog['small_intestine'];
+    this.organCatalog['Large Intestine'] = this.organCatalog['large_intestine'];
+    this.organCatalog['Intestines'] = this.organCatalog['large_intestine'];
+    this.organCatalog['Urinary Bladder'] = this.organCatalog['urinary_bladder'];
+    this.organCatalog['Spine & Bones'] = this.organCatalog['spine'];
 
     if (!this.container) return;
 
@@ -482,6 +688,14 @@ class AnatomyExplorer {
         opacity: 1.0
       },
       {
+        id: 'spleen',
+        file: '/models/nih/spleen_nih.glb',
+        color: 0xa855f7, // Royal Splenic Purple
+        roughness: 0.35,
+        metalness: 0.10,
+        opacity: 0.95
+      },
+      {
         id: 'regional',
         file: '/models/anatria/regional_male.glb',
         color: 0x38bdf8, // Luminous Holographic Cyan Shell
@@ -509,37 +723,84 @@ class AnatomyExplorer {
             let organKey = null;
             let meshColor = sys.color;
 
-            // Granular anatomical mapping based on precise node names
-            if (meshName.includes('liver') || meshName.includes('hepar')) {
-              organKey = 'Liver';
-              meshColor = 0xf97316; // Vibrant terracotta amber for liver
-            } else if (meshName.includes('heart') || meshName.includes('ventricle') || meshName.includes('atrium') || meshName.includes('ascending aorta') || meshName.includes('myocard') || meshName.includes('coronary')) {
-              organKey = 'Heart';
-              meshColor = 0xef4444; // Vibrant crimson
-            } else if (meshName.includes('kidney') || meshName.includes('renal')) {
-              organKey = 'Kidneys';
-              meshColor = 0xe11d48; // Renal ruby
-            } else if (meshName.includes('lung') || meshName.includes('bronch') || meshName.includes('pleura')) {
-              organKey = 'Lungs';
-              meshColor = 0x0ea5e9; // Pulmonary azure
-            } else if (meshName.includes('stomach') || meshName.includes('gaster')) {
-              organKey = 'Stomach';
-              meshColor = 0xfb923c; // Gastric coral
-            } else if (meshName.includes('pancreas')) {
-              organKey = 'Pancreas';
-              meshColor = 0xf59e0b; // Amber
-            } else if (meshName.includes('colon') || meshName.includes('ileum') || meshName.includes('duodenum') || meshName.includes('jejunum') || meshName.includes('cecum') || meshName.includes('rectum')) {
-              organKey = 'Intestines';
-              meshColor = 0xec4899; // Enteric rose
-            } else if (meshName.includes('brain') || meshName.includes('midbrain') || meshName.includes('cerebr') || meshName.includes('hypothalamus') || meshName.includes('gyrus') || meshName.includes('cortex')) {
-              organKey = 'Brain';
-              meshColor = 0xa855f7; // Neuro violet
-            } else if (meshName.includes('vertebra') || meshName.includes('spine') || meshName.includes('sacrum') || meshName.includes('intervertebral')) {
-              organKey = 'Spine';
-              meshColor = 0xf8fafc; // Bone white
-            } else if (meshName.includes('thyroid')) {
-              organKey = 'Thyroid';
-              meshColor = 0xeab308; // Thyroid gold
+            // --- STRICT SYSTEM-SCOPED ANATOMICAL RESOLUTION ---
+            // Prevents cross-organ contamination (e.g. brain ventricles -> heart, cartilage -> thyroid, skin -> spine)
+            if (sys.isShell || sys.id === 'regional') {
+              // Shell meshes never represent an internal organ
+              organKey = null;
+            } else if (sys.id === 'nervous') {
+              // Nervous system: Brain ventricles, cortex, gyri, midbrain belong to Brain
+              if (meshName.includes('brain') || meshName.includes('cerebr') || meshName.includes('cortex') ||
+                  meshName.includes('gyrus') || meshName.includes('ventricle') || meshName.includes('thalamus') ||
+                  meshName.includes('cerebell') || meshName.includes('pons') || meshName.includes('medulla') ||
+                  meshName.includes('hypothalamus') || meshName.includes('falx') || meshName.includes('chiasm')) {
+                organKey = 'brain';
+                meshColor = 0x8b5cf6;
+              }
+            } else if (sys.id === 'cardiovascular') {
+              // Only central cardiac chambers & great vessels map to Heart
+              if (meshName.includes('left ventricle') || meshName.includes('right ventricle') ||
+                  meshName.includes('left atrium') || meshName.includes('right atrium') ||
+                  meshName.includes('ascending aorta') || meshName.includes('pulmonary trunk') ||
+                  meshName.includes('coronary') || meshName.includes('myocard') ||
+                  meshName.includes('papillary muscle') || meshName.includes('circumflex artery of heart') ||
+                  meshName.includes('vein of left ventricle') || meshName.includes('thoracic aorta')) {
+                organKey = 'heart';
+                meshColor = 0xef4444;
+              }
+              // Peripheral and renal/pulmonary vessels remain systemic vasculature (no organKey)
+            } else if (sys.id === 'respiratory') {
+              if (meshName.includes('lung') || meshName.includes('bronch') || meshName.includes('pleura') || meshName.includes('trachea')) {
+                organKey = 'lungs';
+                meshColor = 0x0ea5e9;
+              }
+            } else if (sys.id === 'digestive') {
+              if (meshName.includes('liver') || meshName.includes('hepar') || meshName.includes('segment of liver') || meshName.includes('gallbladder')) {
+                organKey = 'liver';
+                meshColor = 0xf97316;
+              } else if (meshName.includes('stomach') || meshName.includes('gaster')) {
+                organKey = 'stomach';
+                meshColor = 0xfb923c;
+              } else if (meshName.includes('pancreas')) {
+                organKey = 'pancreas';
+                meshColor = 0xf59e0b;
+              } else if (meshName.includes('duodenum') || meshName.includes('jejunum') || meshName.includes('ileum')) {
+                organKey = 'small_intestine';
+                meshColor = 0xf43f5e;
+              } else if (meshName.includes('colon') || meshName.includes('appendix') || meshName.includes('taenia') || meshName.includes('cecum') || meshName.includes('rectum')) {
+                organKey = 'large_intestine';
+                meshColor = 0xec4899;
+              }
+            } else if (sys.id === 'renal') {
+              if (meshName.includes('kidney.l') || meshName.includes('renal pelvis.l')) {
+                organKey = 'left_kidney';
+                meshColor = 0xe11d48;
+              } else if (meshName.includes('kidney.r') || meshName.includes('renal pelvis.r')) {
+                organKey = 'right_kidney';
+                meshColor = 0xe11d48;
+              } else if (meshName.includes('bladder')) {
+                organKey = 'urinary_bladder';
+                meshColor = 0xec4899;
+              } else if (meshName.includes('kidney') || meshName.includes('renal')) {
+                organKey = 'kidneys';
+                meshColor = 0xe11d48;
+              }
+            } else if (sys.id === 'endocrine') {
+              // Endocrine thyroid only; suprarenal adrenal is kept distinct
+              if (meshName.includes('thyroid')) {
+                organKey = 'thyroid';
+                meshColor = 0xeab308;
+              }
+            } else if (sys.id === 'spleen' || meshName.includes('spleen') || meshName.includes('splen')) {
+              organKey = 'spleen';
+              meshColor = 0xa855f7;
+            } else if (sys.id === 'skeletal') {
+              // True vertebral spine only (thyroid cartilage is not mapped to thyroid gland)
+              if (meshName.includes('vertebra') || meshName.includes('intervertebral') ||
+                  meshName.includes('sacrum') || meshName.includes('coccyx')) {
+                organKey = 'spine';
+                meshColor = 0xf8fafc;
+              }
             }
 
             child.userData.system = sys.id;
@@ -593,7 +854,7 @@ class AnatomyExplorer {
               child.userData.defaultOpacity = 0.65;
               child.castShadow = true;
               child.receiveShadow = true;
-            } else if (organKey === 'Heart') {
+            } else if (organKey === 'heart') {
               // Vibrant arterial crimson heart with emissive myocardium
               child.material = new THREE.MeshStandardMaterial({
                 color: 0xef4444,
@@ -620,10 +881,10 @@ class AnatomyExplorer {
               child.userData.defaultOpacity = 0.50;
               child.castShadow = false;
               child.receiveShadow = false;
-            } else if (organKey === 'Brain') {
+            } else if (organKey === 'brain') {
               // Electric neuro-violet brain cortex with glowing emissive centers
               child.material = new THREE.MeshStandardMaterial({
-                color: 0xa855f7,
+                color: 0x8b5cf6,
                 roughness: 0.28,
                 metalness: 0.12,
                 emissive: 0x7e22ce,
@@ -645,7 +906,7 @@ class AnatomyExplorer {
               child.userData.defaultOpacity = 0.32;
               child.castShadow = false;
               child.receiveShadow = false;
-            } else if (organKey === 'Liver') {
+            } else if (organKey === 'liver') {
               // Rich terracotta amber liver
               child.material = new THREE.MeshStandardMaterial({
                 color: 0xf97316,
@@ -657,7 +918,7 @@ class AnatomyExplorer {
               child.userData.defaultEmissive = 0.30;
               child.castShadow = true;
               child.receiveShadow = true;
-            } else if (organKey === 'Kidneys') {
+            } else if (organKey === 'left_kidney' || organKey === 'right_kidney' || organKey === 'kidneys') {
               // Renal ruby kidneys
               child.material = new THREE.MeshStandardMaterial({
                 color: 0xe11d48,
@@ -669,7 +930,19 @@ class AnatomyExplorer {
               child.userData.defaultEmissive = 0.35;
               child.castShadow = true;
               child.receiveShadow = true;
-            } else if (organKey === 'Pancreas') {
+            } else if (organKey === 'spleen') {
+              // Royal splenic purple
+              child.material = new THREE.MeshStandardMaterial({
+                color: 0xa855f7,
+                roughness: 0.30,
+                metalness: 0.10,
+                emissive: 0x7e22ce,
+                emissiveIntensity: 0.35
+              });
+              child.userData.defaultEmissive = 0.35;
+              child.castShadow = true;
+              child.receiveShadow = true;
+            } else if (organKey === 'pancreas') {
               child.material = new THREE.MeshStandardMaterial({
                 color: 0xf59e0b,
                 roughness: 0.30,
@@ -680,7 +953,7 @@ class AnatomyExplorer {
               child.userData.defaultEmissive = 0.30;
               child.castShadow = true;
               child.receiveShadow = true;
-            } else if (organKey === 'Stomach') {
+            } else if (organKey === 'stomach') {
               child.material = new THREE.MeshStandardMaterial({
                 color: 0xfb923c,
                 roughness: 0.30,
@@ -691,7 +964,7 @@ class AnatomyExplorer {
               child.userData.defaultEmissive = 0.25;
               child.castShadow = true;
               child.receiveShadow = true;
-            } else if (organKey === 'Thyroid') {
+            } else if (organKey === 'thyroid') {
               child.material = new THREE.MeshStandardMaterial({
                 color: 0xeab308,
                 roughness: 0.28,
@@ -700,6 +973,28 @@ class AnatomyExplorer {
                 emissiveIntensity: 0.35
               });
               child.userData.defaultEmissive = 0.35;
+              child.castShadow = true;
+              child.receiveShadow = true;
+            } else if (organKey === 'small_intestine' || organKey === 'large_intestine') {
+              child.material = new THREE.MeshStandardMaterial({
+                color: organKey === 'small_intestine' ? 0xf43f5e : 0xec4899,
+                roughness: 0.32,
+                metalness: 0.08,
+                emissive: 0xbe123c,
+                emissiveIntensity: 0.25
+              });
+              child.userData.defaultEmissive = 0.25;
+              child.castShadow = true;
+              child.receiveShadow = true;
+            } else if (organKey === 'urinary_bladder') {
+              child.material = new THREE.MeshStandardMaterial({
+                color: 0xec4899,
+                roughness: 0.30,
+                metalness: 0.10,
+                emissive: 0xbe185d,
+                emissiveIntensity: 0.25
+              });
+              child.userData.defaultEmissive = 0.25;
               child.castShadow = true;
               child.receiveShadow = true;
             } else {
@@ -721,6 +1016,46 @@ class AnatomyExplorer {
                 this.organs[organKey] = [];
               }
               this.organs[organKey].push(child);
+
+              // Register canonical groupings and title-case aliases
+              const titleMap = {
+                'liver': 'Liver',
+                'heart': 'Heart',
+                'kidneys': 'Kidneys',
+                'left_kidney': 'Left Kidney',
+                'right_kidney': 'Right Kidney',
+                'lungs': 'Lungs',
+                'stomach': 'Stomach',
+                'pancreas': 'Pancreas',
+                'spleen': 'Spleen',
+                'small_intestine': 'Small Intestine',
+                'large_intestine': 'Large Intestine',
+                'thyroid': 'Thyroid',
+                'urinary_bladder': 'Urinary Bladder',
+                'brain': 'Brain',
+                'spine': 'Spine'
+              };
+              const titleKey = titleMap[organKey];
+              if (titleKey) {
+                if (!this.organs[titleKey]) this.organs[titleKey] = [];
+                this.organs[titleKey].push(child);
+              }
+
+              // Group kidney meshes under both 'kidneys' and 'Kidneys'
+              if (organKey === 'left_kidney' || organKey === 'right_kidney') {
+                if (!this.organs['kidneys']) this.organs['kidneys'] = [];
+                if (!this.organs['Kidneys']) this.organs['Kidneys'] = [];
+                this.organs['kidneys'].push(child);
+                this.organs['Kidneys'].push(child);
+              }
+
+              // Group intestine meshes under 'intestines' and 'Intestines'
+              if (organKey === 'small_intestine' || organKey === 'large_intestine') {
+                if (!this.organs['intestines']) this.organs['intestines'] = [];
+                if (!this.organs['Intestines']) this.organs['Intestines'] = [];
+                this.organs['intestines'].push(child);
+                this.organs['Intestines'].push(child);
+              }
             }
           }
         });
@@ -751,14 +1086,32 @@ class AnatomyExplorer {
       }
     });
 
+    // Touch event listeners for seamless tablet and mobile navigation
+    dom.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        clickStartX = e.touches[0].clientX;
+        clickStartY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    dom.addEventListener('touchend', (e) => {
+      if (e.changedTouches.length === 1) {
+        const diffX = Math.abs(e.changedTouches[0].clientX - clickStartX);
+        const diffY = Math.abs(e.changedTouches[0].clientY - clickStartY);
+        if (diffX < 10 && diffY < 10) {
+          this.handleRaycastClick(e.changedTouches[0]);
+        }
+      }
+    }, { passive: true });
+
     dom.addEventListener('mousemove', (e) => {
       const rect = dom.getBoundingClientRect();
       this.mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       this.mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
 
-      // Hover picking feedback & HUD Tooltip tracking
+      // Hover picking feedback & HUD Tooltip tracking (visible meshes only)
       this.raycaster.setFromCamera(this.mouse, this.camera);
-      const interactiveMeshes = Array.from(this.meshToOrganName.keys());
+      const interactiveMeshes = Array.from(this.meshToOrganName.keys()).filter(m => m.visible && (!m.parent || m.parent.visible));
       const intersects = this.raycaster.intersectObjects(interactiveMeshes, false);
 
       if (intersects.length > 0) {
@@ -784,7 +1137,8 @@ class AnatomyExplorer {
 
   showHudTooltip(event, organKey) {
     if (!this.hudTooltip) return;
-    const config = this.organCatalog[organKey];
+    const canonicalKey = (window.resolveCanonicalOrganId && window.resolveCanonicalOrganId(organKey)) || (organKey || '').toLowerCase();
+    const config = this.organCatalog[canonicalKey] || this.organCatalog[organKey];
     if (!config) return;
 
     const rect = this.container.getBoundingClientRect();
@@ -853,7 +1207,7 @@ class AnatomyExplorer {
     this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
     this.raycaster.setFromCamera(this.mouse, this.camera);
-    const interactiveMeshes = Array.from(this.meshToOrganName.keys());
+    const interactiveMeshes = Array.from(this.meshToOrganName.keys()).filter(m => m.visible && (!m.parent || m.parent.visible));
     const intersects = this.raycaster.intersectObjects(interactiveMeshes, false);
 
     if (intersects.length > 0) {
@@ -871,17 +1225,28 @@ class AnatomyExplorer {
   }
 
   triggerOrganReveal(organName, triggerCallback = true) {
-    const config = this.organCatalog[organName];
+    const canonicalKey = (window.resolveCanonicalOrganId && window.resolveCanonicalOrganId(organName)) || (organName || '').toLowerCase();
+    const config = this.organCatalog[canonicalKey] || this.organCatalog[organName];
     if (!config) return;
 
-    this.activeOrgan = organName;
+    this.activeOrgan = config.name;
+
+    // Helper for multi-mesh and bilateral organ grouping
+    const isMatchingOrgan = (meshKey) => {
+      const canonicalMesh = (window.resolveCanonicalOrganId && window.resolveCanonicalOrganId(meshKey)) || (meshKey || '').toLowerCase();
+      if (canonicalMesh === canonicalKey) return true;
+      if (canonicalKey === 'kidneys' && (canonicalMesh === 'left_kidney' || canonicalMesh === 'right_kidney' || canonicalMesh === 'kidneys')) return true;
+      if (canonicalKey === 'large_intestine' && (canonicalMesh === 'small_intestine' || canonicalMesh === 'large_intestine' || canonicalMesh === 'intestines')) return true;
+      if ((canonicalKey === 'small_intestine' || canonicalKey === 'large_intestine') && canonicalMesh === 'intestines') return true;
+      return false;
+    };
 
     // 1. Visual Highlighting & Non-Relevant Organ Dimming
     const selectedColor = new THREE.Color(config.color);
     const emissiveHighlight = new THREE.Color(0x159a92); // Precision Medical Teal (#159A92)
 
     this.meshToOrganName.forEach((orgKey, mesh) => {
-      if (orgKey === organName) {
+      if (isMatchingOrgan(orgKey)) {
         mesh.visible = true;
         mesh.material.transparent = false;
         mesh.material.opacity = 1.0;
@@ -923,7 +1288,7 @@ class AnatomyExplorer {
 
     // 3. Trigger External Callback (for lab table filtering and sidebars)
     if (triggerCallback && typeof this.options.onOrganSelected === 'function') {
-      this.options.onOrganSelected(organName, config);
+      this.options.onOrganSelected(config.name, config);
     }
 
     // 4. Update UI labels, BioSignals spatial cards, and dynamic SVG connector
@@ -1659,7 +2024,13 @@ class AnatomyExplorer {
     if (easyRole) easyRole.textContent = config.easyRole || `${config.name} • Clinical Analysis`;
 
     const role = document.getElementById('organ-role');
-    if (role) role.textContent = config.role;
+    if (role) role.textContent = config.level1_role || config.role;
+
+    // Update Level 2 Medical Architecture accordion text
+    const level2Text = document.getElementById('organ-level2-text');
+    if (level2Text) {
+      level2Text.textContent = config.level2_medical || config.clinicalNote || 'Clinical histology and physiological metabolic details.';
+    }
 
     const clinical = document.getElementById('organ-clinical');
     if (clinical) clinical.textContent = config.clinicalNote;
@@ -1673,11 +2044,12 @@ class AnatomyExplorer {
     // Render BioSignals Cards for this Organ
     const biosignalsContainer = document.getElementById('organ-biomarkers-container');
     if (biosignalsContainer) {
-      const markers = this.verifiedBiomarkers[organName] || [];
+      const canonicalKey = (window.resolveCanonicalOrganId && window.resolveCanonicalOrganId(organName)) || (organName || '').toLowerCase();
+      const markers = this.verifiedBiomarkers[canonicalKey] || this.verifiedBiomarkers[organName] || this.verifiedBiomarkers[config.name] || [];
       if (markers.length === 0) {
         biosignalsContainer.innerHTML = `
-          <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800 text-xs text-slate-400">
-            No abnormal findings flagged in current encounter for ${organName}.
+          <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800 text-xs text-slate-300">
+            No abnormal findings flagged in current encounter for ${config.name}.
           </div>
         `;
       } else {
@@ -1694,10 +2066,10 @@ class AnatomyExplorer {
                     <span>${m.name}</span>
                     <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-800 text-teal-300 font-mono">${m.conf}</span>
                   </div>
-                  <div class="text-[11px] text-slate-400 mt-0.5">Reference: ${m.ref} ${m.unit} • ${m.page}</div>
+                  <div class="text-[11px] text-slate-300 mt-0.5">Reference: ${m.ref} ${m.unit} • ${m.page}</div>
                 </div>
                 <div class="text-right shrink-0">
-                  <div class="text-sm font-extrabold text-white">${m.val} <span class="text-[10px] font-normal text-slate-400">${m.unit}</span></div>
+                  <div class="text-sm font-extrabold text-white">${m.val} <span class="text-[10px] font-normal text-slate-300">${m.unit}</span></div>
                   <span class="${badgeClass} text-[10px] py-0 px-1.5 inline-block mt-0.5">${m.label}</span>
                 </div>
               </div>
@@ -1718,10 +2090,10 @@ class AnatomyExplorer {
     if (bridgesContainer) {
       bridgesContainer.innerHTML = `
         <div class="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-slate-800">
-          <a href="/nutrition?focus=${encodeURIComponent(organName)}" class="px-2.5 py-1.5 rounded-lg bg-teal-950/80 hover:bg-teal-900 border border-teal-800 text-teal-300 text-xs font-semibold text-center transition-all flex items-center justify-center gap-1">
-            <span>🌿 Fuel ${organName}</span>
+          <a href="/nutrition?focus=${encodeURIComponent(config.name)}" class="px-2.5 py-1.5 rounded-lg bg-teal-950/80 hover:bg-teal-900 border border-teal-800 text-teal-300 text-xs font-semibold text-center transition-all flex items-center justify-center gap-1">
+            <span>🌿 Fuel ${config.name.split(' (')[0]}</span>
           </a>
-          <a href="/alcohol?focus=${encodeURIComponent(organName)}" class="px-2.5 py-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 border border-amber-800 text-amber-300 text-xs font-semibold text-center transition-all flex items-center justify-center gap-1">
+          <a href="/alcohol?focus=${encodeURIComponent(config.name)}" class="px-2.5 py-1.5 rounded-lg bg-amber-950/80 hover:bg-amber-900 border border-amber-800 text-amber-300 text-xs font-semibold text-center transition-all flex items-center justify-center gap-1">
             <span>🍷 Alcohol Impact</span>
           </a>
         </div>
@@ -1730,6 +2102,17 @@ class AnatomyExplorer {
 
     // Update connector immediately
     setTimeout(() => this.updateBioSignalsConnector(), 50);
+  }
+
+  toggleClinicalLevel2() {
+    const drawer = document.getElementById('organ-level2-drawer');
+    const chevron = document.getElementById('organ-level2-chevron');
+    if (drawer) {
+      const isHidden = drawer.classList.toggle('hidden');
+      if (chevron) {
+        chevron.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+      }
+    }
   }
 
   toggleBiomarkerDrawer(index) {
@@ -1905,10 +2288,13 @@ class AnatomyExplorer {
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const focusOrgan = urlParams.get('focus');
-      if (focusOrgan && this.organCatalog[focusOrgan]) {
-        setTimeout(() => {
-          this.selectOrgan(focusOrgan, true);
-        }, 800);
+      if (focusOrgan) {
+        const canonicalKey = (window.resolveCanonicalOrganId && window.resolveCanonicalOrganId(focusOrgan)) || focusOrgan.toLowerCase();
+        if (this.organCatalog[canonicalKey] || this.organCatalog[focusOrgan]) {
+          setTimeout(() => {
+            this.selectOrgan(canonicalKey || focusOrgan, true);
+          }, 800);
+        }
       }
     } catch (e) {
       console.warn('URL param parse error:', e);

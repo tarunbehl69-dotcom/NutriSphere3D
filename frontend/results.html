@@ -251,6 +251,7 @@
 
   <!-- Scripts -->
   <script src="/js/app.js"></script>
+  <script src="/js/organ_registry.js"></script>
   <script src="/js/anatomy.js"></script>
   <script src="/js/results.js"></script>
   <script src="/js/presentation.js"></script>
@@ -274,17 +275,18 @@
     });
 
     function filterByOrgan(organ) {
+      const canonicalKey = (window.resolveCanonicalOrganId && window.resolveCanonicalOrganId(organ)) || organ;
       const filterElem = document.getElementById('organ-filter');
       if (filterElem) {
-        filterElem.value = organ;
+        filterElem.value = canonicalKey || organ;
         filterElem.dispatchEvent(new Event('change'));
       }
       const atlasLink = document.getElementById('link-to-atlas');
       if (atlasLink) {
-        atlasLink.href = organ && organ !== 'ALL' ? `/anatomy?focus=${encodeURIComponent(organ)}` : '/anatomy';
+        atlasLink.href = canonicalKey && canonicalKey !== 'ALL' ? `/anatomy?focus=${encodeURIComponent(canonicalKey)}` : '/anatomy';
       }
-      if (organ !== 'ALL' && window.resultsAnatomy) {
-        window.resultsAnatomy.selectOrgan(organ);
+      if (canonicalKey && canonicalKey !== 'ALL' && window.resultsAnatomy) {
+        window.resultsAnatomy.selectOrgan(canonicalKey);
       } else if (window.resultsAnatomy) {
         window.resultsAnatomy.resetView();
       }

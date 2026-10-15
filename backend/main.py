@@ -95,6 +95,12 @@ from backend.services.game_service import (
     MISSION_DEFINITIONS,
     ACHIEVEMENT_DEFINITIONS
 )
+from backend.services.organ_registry import (
+    ORGAN_REGISTRY,
+    get_all_organs,
+    get_organ_by_id,
+    find_organ_for_test
+)
 from backend.seed_data import (
     load_test_catalog,
     load_demo_report,
@@ -302,6 +308,29 @@ async def get_catalog_analyte(analyte_code: str):
                 ).model_dump(mode="json")
             )
         return dict(row)
+
+
+# --- Verified Anatomical Registry Endpoints ---
+
+@app.get("/api/organs", tags=["Anatomy"])
+async def list_verified_organs():
+    """Return all verified anatomical organ definitions and their 3D models."""
+    return {"total": len(ORGAN_REGISTRY), "organs": get_all_organs()}
+
+
+@app.get("/api/organs/{organ_id}", tags=["Anatomy"])
+async def get_verified_organ(organ_id: str):
+    """Retrieve full anatomical, medical, and test metadata for an organ."""
+    organ = get_organ_by_id(organ_id)
+    if not organ:
+        return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content=ErrorOut(
+                code="ORGAN_NOT_FOUND",
+                message=f"Organ '{organ_id}' not found in the verified anatomical registry."
+            ).model_dump(mode="json")
+        )
+    return organ
 
 
 @app.get("/api/user/demo", response_model=UserOut, tags=["Users"])

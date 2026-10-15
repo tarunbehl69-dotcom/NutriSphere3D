@@ -273,7 +273,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderBiomarkersTable(activeReport?.biomarkers);
 
         if (window.resultsAnatomy && m.organ_system) {
-          window.resultsAnatomy.selectOrgan(m.organ_system);
+          const canonical = (window.resolveCanonicalOrganId && window.resolveCanonicalOrganId(m.organ_system)) || m.organ_system;
+          window.resultsAnatomy.selectOrgan(canonical);
         }
       });
 
@@ -287,6 +288,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const reasonsList = (interp.possible_reasons || []).map(r => `<li>${r}</li>`).join('');
         const questionsList = (interp.clinical_questions || []).map(q => `<li>${q}</li>`).join('');
         const contextList = (interp.contextual_notes || []).map(c => `<li>${c}</li>`).join('');
+        const canonicalOrgan = (window.resolveCanonicalOrganId && window.resolveCanonicalOrganId(m.organ_system)) || m.organ_system;
 
         drawerRow.innerHTML = `
           <td colspan="8" class="p-6 text-xs text-slate-700">
@@ -353,10 +355,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <h5 class="font-bold text-slate-500 uppercase tracking-wider text-[11px] mb-1">Medical Science Reference</h5>
                     <p class="text-slate-700 text-xs italic">${interp.medical_reference || 'AACC Clinical Laboratory Reference Guide'}</p>
                   </div>
-                  <div class="mt-3 flex items-center justify-between">
-                    <button onclick="if(window.resultsAnatomy){ window.resultsAnatomy.selectOrgan('${m.organ_system}'); }" class="px-3 py-1.5 rounded-lg bg-teal-50 text-teal-700 border border-teal-200 hover:bg-teal-100 text-xs font-semibold transition-colors">
-                      Focus ${m.organ_system} in 3D Anatomy
-                    </button>
+                  <div class="mt-3 flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                      <button onclick="if(window.resultsAnatomy){ window.resultsAnatomy.selectOrgan('${canonicalOrgan}'); }" class="px-3 py-1.5 rounded-lg bg-teal-50 text-teal-700 border border-teal-200 hover:bg-teal-100 text-xs font-semibold transition-colors">
+                        Focus ${m.organ_system} in 3D
+                      </button>
+                      <a href="/anatomy?focus=${encodeURIComponent(canonicalOrgan)}" class="px-3 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold transition-colors">
+                        Open in 3D Body Atlas →
+                      </a>
+                    </div>
                     <span class="text-[11px] text-slate-400">Non-Diagnostic Education</span>
                   </div>
                 </div>

@@ -13,8 +13,24 @@ class NutritionModule {
     this.currentAllergies = [];
     this.reportId = 'rep_demo_2026_001';
 
+    const urlParams = new URLSearchParams(window.location.search);
+    this.focusOrgan = urlParams.get('focus');
+
     this.initEventListeners();
     this.fetchGuidance();
+    this.checkFocusOrgan();
+  }
+
+  checkFocusOrgan() {
+    if (!this.focusOrgan) return;
+    const banner = document.getElementById('focus-organ-banner');
+    const title = document.getElementById('focus-organ-title');
+    const desc = document.getElementById('focus-organ-desc');
+    if (banner && title && desc) {
+      banner.classList.remove('hidden');
+      title.textContent = `Targeted Nutrition for ${this.focusOrgan}`;
+      desc.textContent = `Showing whole-food recovery strategies and biomarker-linked meal components specifically calibrated to support your ${this.focusOrgan.toLowerCase()}.`;
+    }
   }
 
   initEventListeners() {

@@ -15,11 +15,27 @@ class AlcoholHealthModule {
     this.records = [];
     this.chart = null;
 
+    const urlParams = new URLSearchParams(window.location.search);
+    this.focusOrgan = urlParams.get('focus');
+
     this.init3DLiver();
     this.initCalculator();
     this.initReportBiomarkers();
     this.loadIntakeHistory();
     this.setupEventListeners();
+    this.checkFocusOrgan();
+  }
+
+  checkFocusOrgan() {
+    if (!this.focusOrgan) return;
+    const banner = document.getElementById('focus-organ-banner');
+    const title = document.getElementById('focus-organ-title');
+    const desc = document.getElementById('focus-organ-desc');
+    if (banner && title && desc) {
+      banner.classList.remove('hidden');
+      title.textContent = `Alcohol Impact on ${this.focusOrgan}`;
+      desc.textContent = `Examining ethanol biochemical breakdown, acetaldehyde formation, and physiological recovery mechanisms specifically for your ${this.focusOrgan.toLowerCase()}.`;
+    }
   }
 
   // --- 1. Interactive 3D Three.js Liver Model ---

@@ -175,65 +175,112 @@
 
         <!-- Quick Organ Jump Cards -->
         <div>
-          <h2 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Pick an Organ to Zoom</h2>
+          <h2 class="text-[10px] font-bold uppercase tracking-wider text-slate-300 mb-1.5">Pick an Organ to Zoom (15 Verified Organs)</h2>
           <div class="grid grid-cols-2 gap-1.5" id="organ-buttons-grid">
-            <button onclick="window.anatomyInstance.selectOrgan('Liver')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+            <button onclick="window.anatomyInstance.selectOrgan('liver')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/80 border border-slate-700/80 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
               <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
                 <span>Liver</span>
                 <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
               </div>
-              <div class="text-[10px] text-amber-400 font-medium">ALT, AST Elevated</div>
+              <div class="text-[10px] text-amber-300 font-medium">ALT, AST Elevated</div>
             </button>
-            <button onclick="window.anatomyInstance.selectOrgan('Heart')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+            <button onclick="window.anatomyInstance.selectOrgan('heart')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/80 border border-slate-700/80 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
               <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
                 <span>Heart</span>
                 <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
               </div>
-              <div class="text-[10px] text-amber-400 font-medium">LDL, ApoB Alert</div>
+              <div class="text-[10px] text-amber-300 font-medium">LDL, ApoB Alert</div>
             </button>
-            <button onclick="window.anatomyInstance.selectOrgan('Kidneys')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+            <button onclick="window.anatomyInstance.selectOrgan('kidneys')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/80 border border-slate-700/80 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
               <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
-                <span>Kidneys</span>
+                <span>Kidneys (Both)</span>
                 <span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
               </div>
-              <div class="text-[10px] text-teal-400 font-medium">eGFR 88 mL/min</div>
+              <div class="text-[10px] text-teal-300 font-medium">eGFR 88 mL/min</div>
             </button>
-            <button onclick="window.anatomyInstance.selectOrgan('Pancreas')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+            <button onclick="window.anatomyInstance.selectOrgan('left_kidney')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/80 border border-slate-700/80 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+              <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
+                <span>Left Kidney</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
+              </div>
+              <div class="text-[10px] text-teal-300 font-medium">Creatinine 1.05</div>
+            </button>
+            <button onclick="window.anatomyInstance.selectOrgan('right_kidney')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/80 border border-slate-700/80 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+              <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
+                <span>Right Kidney</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
+              </div>
+              <div class="text-[10px] text-teal-300 font-medium">Nephron Filter</div>
+            </button>
+            <button onclick="window.anatomyInstance.selectOrgan('pancreas')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/80 border border-slate-700/80 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
               <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
                 <span>Pancreas</span>
                 <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
               </div>
-              <div class="text-[10px] text-amber-400 font-medium">Glucose 104 mg/dL</div>
+              <div class="text-[10px] text-amber-300 font-medium">Glucose 104 mg/dL</div>
             </button>
-            <button onclick="window.anatomyInstance.selectOrgan('Lungs')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+            <button onclick="window.anatomyInstance.selectOrgan('lungs')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/80 border border-slate-700/80 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
               <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
                 <span>Lungs</span>
                 <span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
               </div>
-              <div class="text-[10px] text-teal-400 font-medium">Hb 14.8 g/dL</div>
+              <div class="text-[10px] text-teal-300 font-medium">Hb 14.8 g/dL</div>
             </button>
-            <button onclick="window.anatomyInstance.selectOrgan('Spine')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+            <button onclick="window.anatomyInstance.selectOrgan('spleen')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/80 border border-slate-700/80 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
               <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
-                <span>Spine</span>
+                <span>Spleen</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+              </div>
+              <div class="text-[10px] text-purple-300 font-medium">Platelets Normal</div>
+            </button>
+            <button onclick="window.anatomyInstance.selectOrgan('stomach')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/80 border border-slate-700/80 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+              <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
+                <span>Stomach</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
+              </div>
+              <div class="text-[10px] text-slate-300 font-medium">Vitamin B12</div>
+            </button>
+            <button onclick="window.anatomyInstance.selectOrgan('small_intestine')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/80 border border-slate-700/80 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+              <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
+                <span>Small Intestine</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
+              </div>
+              <div class="text-[10px] text-slate-300 font-medium">Iron Absorption</div>
+            </button>
+            <button onclick="window.anatomyInstance.selectOrgan('large_intestine')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/80 border border-slate-700/80 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+              <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
+                <span>Large Intestine</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
+              </div>
+              <div class="text-[10px] text-slate-300 font-medium">Microbiome Center</div>
+            </button>
+            <button onclick="window.anatomyInstance.selectOrgan('urinary_bladder')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/80 border border-slate-700/80 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+              <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
+                <span>Urinary Bladder</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
+              </div>
+              <div class="text-[10px] text-teal-300 font-medium">Urinalysis Clear</div>
+            </button>
+            <button onclick="window.anatomyInstance.selectOrgan('brain')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/80 border border-slate-700/80 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+              <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
+                <span>Brain</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+              </div>
+              <div class="text-[10px] text-slate-300 font-medium">Folate, TSH</div>
+            </button>
+            <button onclick="window.anatomyInstance.selectOrgan('thyroid')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/80 border border-slate-700/80 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
+              <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
+                <span>Thyroid</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
+              </div>
+              <div class="text-[10px] text-teal-300 font-medium">TSH Normal</div>
+            </button>
+            <button onclick="window.anatomyInstance.selectOrgan('spine')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/80 border border-slate-700/80 hover:border-teal-400 hover:bg-teal-950/40 transition-all col-span-2">
+              <div class="text-xs font-bold text-slate-100 flex items-center justify-between">
+                <span>Spine & Bones</span>
                 <span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
               </div>
-              <div class="text-[10px] text-rose-400 font-medium">Vit D 22.4 (Low)</div>
-            </button>
-            <button onclick="window.anatomyInstance.selectOrgan('Stomach')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
-              <div class="text-xs font-bold text-slate-100">Stomach</div>
-              <div class="text-[10px] text-slate-400 font-medium">Vitamin B12</div>
-            </button>
-            <button onclick="window.anatomyInstance.selectOrgan('Intestines')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
-              <div class="text-xs font-bold text-slate-100">Intestines</div>
-              <div class="text-[10px] text-slate-400 font-medium">Iron & Ferritin</div>
-            </button>
-            <button onclick="window.anatomyInstance.selectOrgan('Brain')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
-              <div class="text-xs font-bold text-slate-100">Brain</div>
-              <div class="text-[10px] text-slate-400 font-medium">Folate, TSH</div>
-            </button>
-            <button onclick="window.anatomyInstance.selectOrgan('Thyroid')" class="organ-selector-btn text-left p-2 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-teal-400 hover:bg-teal-950/40 transition-all">
-              <div class="text-xs font-bold text-slate-100">Thyroid</div>
-              <div class="text-[10px] text-teal-400 font-medium">TSH Normal</div>
+              <div class="text-[10px] text-rose-300 font-medium">Vit D 22.4 (Needs Attention) • Calcium 9.6 mg/dL</div>
             </button>
           </div>
         </div>
@@ -464,10 +511,27 @@
 
       <!-- Section 1: What This Organ Does (Simple Everyday Words) -->
       <div>
-        <h4 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">What This Organ Does</h4>
+        <h4 class="text-[10px] font-bold uppercase tracking-wider text-slate-300 mb-1">What This Organ Does (Level 1)</h4>
         <p class="text-xs text-slate-200 leading-relaxed font-normal" id="organ-role">
           Cleans your blood, breaks down nutrients from food, stores energy, and helps digest fats.
         </p>
+      </div>
+
+      <!-- Section 1B: Level 2 Clinical & Cellular Architecture (Expandable) -->
+      <div class="rounded-xl border border-teal-500/30 bg-slate-900/90 overflow-hidden">
+        <button type="button" onclick="window.anatomyInstance.toggleClinicalLevel2()" class="w-full px-3 py-2 text-left flex items-center justify-between hover:bg-slate-800/80 transition-colors">
+          <div class="flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
+            <span class="text-[11px] font-bold text-teal-300">Level 2: Clinical & Cellular Architecture</span>
+          </div>
+          <svg id="organ-level2-chevron" class="w-3.5 h-3.5 text-teal-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div id="organ-level2-drawer" class="hidden px-3 pb-3 pt-1 border-t border-slate-800/80 text-[11px] text-slate-300 space-y-2">
+          <p id="organ-level2-text" class="leading-relaxed"></p>
+          <div class="p-2 rounded bg-teal-950/40 border border-teal-800/40 text-[10px] text-teal-200/90 leading-tight">
+            <strong>Clinical Safety Guardrail:</strong> Elevated or borderline biomarkers indicate cellular metabolic stress or physiological variation, not a diagnosis of physical organ damage.
+          </div>
+        </div>
       </div>
 
       <!-- Section 2: Your Test Results for this Organ -->
@@ -476,7 +540,7 @@
           <h4 class="text-[10px] font-bold uppercase tracking-wider text-teal-400 flex items-center gap-1.5">
             <span>Your Test Numbers</span>
           </h4>
-          <span class="text-[10px] text-slate-400 font-mono" id="organ-record-year">2026 Report</span>
+          <span class="text-[10px] text-slate-300 font-mono" id="organ-record-year">2026 Report</span>
         </div>
         <div class="flex flex-col gap-2" id="organ-biomarkers-container">
           <!-- Populated dynamically by anatomy.js updateOverlayUI -->
@@ -553,6 +617,7 @@
   </main>
 
   <!-- Scripts -->
+  <script src="/js/organ_registry.js"></script>
   <script src="/js/anatomy.js"></script>
   <script src="/js/presentation.js"></script>
   <script>
