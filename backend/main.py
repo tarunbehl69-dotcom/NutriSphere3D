@@ -499,7 +499,8 @@ async def upload_medical_report(
 
     # 5. Secure file persistence on disk
     report_id = f"rep_{uuid.uuid4().hex[:12]}"
-    user_upload_dir = BASE_DIR / "uploads" / current_user["id"]
+    upload_root = Path("/tmp/uploads") if os.environ.get("VERCEL") else (BASE_DIR / "uploads")
+    user_upload_dir = upload_root / current_user["id"]
     user_upload_dir.mkdir(parents=True, exist_ok=True)
     saved_file_path = user_upload_dir / f"{report_id}_{clean_filename}"
     saved_file_path.write_bytes(content)

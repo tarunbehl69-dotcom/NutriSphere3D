@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index.py" },
+    { "source": "/css/(.*)", "destination": "/frontend/css/$1" },
+    { "source": "/js/(.*)", "destination": "/frontend/js/$1" },
+    { "source": "/models/(.*)", "destination": "/frontend/models/$1" },
+    { "source": "/draco/(.*)", "destination": "/frontend/draco/$1" },
+    { "source": "/anatomy/?", "destination": "/frontend/anatomy.html" },
+    { "source": "/results/?", "destination": "/frontend/results.html" },
+    { "source": "/nutrition/?", "destination": "/frontend/nutrition.html" },
+    { "source": "/alcohol/?", "destination": "/frontend/alcohol.html" },
+    { "source": "/dashboard/?", "destination": "/frontend/dashboard.html" },
+    { "source": "/history/?", "destination": "/frontend/dashboard.html" },
+    { "source": "/upload/?", "destination": "/frontend/upload.html" },
+    { "source": "/login/?", "destination": "/frontend/index.html" },
+    { "source": "/quest/?", "destination": "/frontend/quest.html" },
+    { "source": "/games/?", "destination": "/frontend/games.html" },
+    { "source": "/", "destination": "/frontend/index.html" }
+  ]
+}

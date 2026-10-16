@@ -12,8 +12,24 @@ import secrets
 from pathlib import Path
 from contextlib import contextmanager
 
+import shutil
+
 BASE_DIR = Path(__file__).resolve().parent.parent
-DB_PATH = os.environ.get("NUTRISPHERE_DB_PATH", str(BASE_DIR / "nutrisphere3d.db"))
+
+def _get_db_path() -> str:
+    """Resolve database path, copying to /tmp in serverless/Vercel environments with read-only root."""
+    if os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
+        tmp_db = Path("/tmp/nutrisphere3d.db")
+        source_db = BASE_DIR / "nutrisphere3d.db"
+        if not tmp_db.exists() and source_db.exists():
+            try:
+                shutil.copy2(source_db, tmp_db)
+            except Exception as e:
+                print(f"[Database] Warning copying seed DB to /tmp: {e}")
+        return os.environ.get("NUTRISPHERE_DB_PATH", str(tmp_db))
+    return os.environ.get("NUTRISPHERE_DB_PATH", str(BASE_DIR / "nutrisphere3d.db"))
+
+DB_PATH = _get_db_path()
 
 
 def hash_password(password: str, salt: str = None) -> tuple[str, str]:
@@ -41,11 +57,14 @@ def verify_password(password: str, salt: str, expected_hash: str) -> bool:
 
 def get_db_connection() -> sqlite3.Connection:
     """Create a configured SQLite database connection."""
-    conn = sqlite3.connect(DB_PATH, timeout=15.0)
+    target_path = _get_db_path()
+    conn = sqlite3.connect(target_path, timeout=15.0)
     conn.row_factory = sqlite3.Row
-    # Enforce foreign keys and WAL mode for reliability and cascade deletions
+    # Enforce foreign keys
     conn.execute("PRAGMA foreign_keys = ON;")
-    conn.execute("PRAGMA journal_mode = WAL;")
+    # WAL mode requires shared memory; use standard rollback journal in serverless environments
+    if not os.environ.get("VERCEL") and not os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
+        conn.execute("PRAGMA journal_mode = WAL;")
     return conn
 
 
